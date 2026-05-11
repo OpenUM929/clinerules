@@ -13,6 +13,7 @@
 | [api-endpoints.md](api-endpoints.md) | API 엔드포인트 |
 | [file-structure.md](file-structure.md) | 파일 구조, 공통 모듈 |
 | [database.md](database.md) | DB 테이블, MSYS 명명 규칙 |
+| [operator-manual/](operator-manual/) | 운영자 메뉴얼 (화멳별 조작 가이드, 장애 대응) |
 
 ---
 
@@ -24,6 +25,7 @@
 | 필드명/네이밍 | [field-naming-convention.md](../development/field-naming-convention.md) (공통) |
 | 공통 모듈 | [file-structure.md](file-structure.md) |
 | 데이터베이스 | [database.md](database.md) |
+| 운영자 메뉴얼 작성/수정 | [operator-manual/DEVELOPMENT.md](operator-manual/DEVELOPMENT.md) |
 
 ---
 
