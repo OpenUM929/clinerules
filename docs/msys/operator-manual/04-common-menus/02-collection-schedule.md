@@ -77,7 +77,7 @@
 
 <img src="images/collection-schedule-group-popup.png" width="600" alt="그룹 팝업">
 
-**표시 조건:** 그룹화된 Job 셀에 마우스 오버
+**표시 조건:** 그룹화된 Job 셀 클릭
 **표시 내용:**
 - 그룹 내 개별 Job 목록 (페이징 지원)
 - 각 Job의 상태별 색상 유지
@@ -93,7 +93,9 @@
 
 #### ⑥ 그룹 메모 팝업 (`#memo-popup`)
 
-**표시 조건:** 그룹 셀 더블클릭 (관리자만)
+<img src="images/collection-schedule-memo-popup.png" width="800" alt="그룹 메모 팝업">
+
+**표시 조건:** 그룹 셀의 `+` 버튼 클릭 (관리자만)
 **기능:**
 - 메모 작성/수정/삭제
 - 작성자, 작성일시 표시
@@ -106,7 +108,7 @@
 - 그룹 항목 색상 가이드 (상태별 색상 코드)
 - 상세 데이터 상태 가이드
 
-<img src="images/collection-schedule-settings.png" width="800" alt="설정 패널">
+<img src="images/collection-schedule-settings-expanded.png" width="800" alt="설정 패널 (펼침)">
 
 ---
 
