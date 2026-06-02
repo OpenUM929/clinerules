@@ -1,6 +1,8 @@
-# 프로젝트 시나리오 테스트 (Project Scenarios - project_wordcloud)
+# 프로젝트 시나리오 테스트 (Project Scenarios - msys)
 
 **문서 위치**: `.clinerules/docs/project_wordcloud/scenario-test_project.md`
+
+> ⚠️ 이 문서는 project_wordcloud 기준입니다. msys 시나리오는 `.clinerules/docs/msys/` 문서를 참조하세요.
 
 ---
 
