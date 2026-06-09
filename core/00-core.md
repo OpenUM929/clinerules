@@ -16,6 +16,7 @@
 
 | 작업 유형 | 이동할 문서 |
 |-----------|-------------|
+| **🔴 계획서/기획서/설계서 작성 요청** | **[00-core/03.plan-mode.md](00-core/03.plan-mode.md) — 저장 위치·파일명 형식 반드시 확인** |
 | wordcloud 관련 작업 | [.clinerules/docs/msys/README.md](../docs/msys/README.md) |
 | **시간 문제** | **[.clinerules/docs/development/time-handling-rules.md](../docs/development/time-handling-rules.md)** |
 | **필드명/네이밍** | **[.clinerules/docs/development/field-naming-convention.md](../docs/development/field-naming-convention.md)** |
