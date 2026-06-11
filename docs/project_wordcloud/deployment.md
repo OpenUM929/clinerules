@@ -39,23 +39,27 @@ cd wordcloud_project
 ../wordcloud-source/         ← 압축 풀기 전 폴더
 ```
 
-**내부망 업데이트 방법:**
+**내부망 업데이트 방법 (간편):**
+1. `wordcloud-project.zip`을 내부망 PC의 패키지 폴더(`wordcloud-internal/` 등)에 복사
+2. `update.bat` 더블클릭 → 자동으로 교체 완료
+3. `start.bat`으로 재시작
+
+**내부망 업데이트 방법 (수동):**
 1. `wordcloud-project.zip`을 USB로 내부망 PC에 복사
 2. 기존 패키지에서 `wordcloud_project/` 폴더 **삭제**
-3. `wordcloud-project.zip`을 풀면 `wordcloud-source/` 폴더 생성됨
-4. `wordcloud-source/` → `wordcloud_project/`로 **이름 변경**
+3. `wordcloud-project.zip` 압축 해제 → `wordcloud_project/` 폴더 생성됨
+4. 해제된 `wordcloud_project/` 폴더를 패키지 폴더 안으로 이동
 5. 끝. 재시작하면 새 소스로 동작
 
 **ZIP의 구조 (압축 풀면):**
 ```
-wordcloud-source/
+wordcloud_project/     ← 이 폴더 전체를 패키지 폴더 안에 넣으면 됨
 ├── .env
 ├── src/
 ├── web/
 ├── configs/
 ├── utils/
-├── requirements.txt
-└── scripts/
+└── requirements.txt
 ```
 
 ## 패키지 배포 (전체) — `wordcloud-internal/`
@@ -89,6 +93,7 @@ wordcloud-internal/
 │   └── .sessions/        SQLite DB (자동 생성)
 ├── install_driver/       NVIDIA CUDA Driver (선택)
 ├── start.bat             [더블클릭 실행]
+├── update.bat            [소스 업데이트용 — ZIP 교체 자동화]
 └── README.txt            설치/실행 안내
 ```
 
