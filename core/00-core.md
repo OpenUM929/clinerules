@@ -8,7 +8,7 @@
 
 ## 현재 프로젝트
 
-**[.clinerules/docs/project_wordcloud/README.md](../docs/msys/README.md)** - 프로젝트 상세 구조 및 작업 유형 분류 참조
+**[.clinerules/docs/project_wordcloud/README.md](../docs/project_wordcloud/README.md)** - 프로젝트 상세 구조 및 작업 유형 분류 참조
 
 ---
 
@@ -35,6 +35,9 @@
 | **요구사항 명확화** | **[13-requirements-clarification.md](13-requirements-clarification.md)** |
 | **주석/로그 제거** | **[14.comment-log-removal.md](14.comment-log-removal.md)** |
 | **운영자 메뉴얼 작성/수정** | **[.clinerules/docs/msys/operator-manual/DEVELOPMENT.md](../docs/msys/operator-manual/DEVELOPMENT.md)** |
+| **내부망 배포 패키지 생성** | **[.clinerules/docs/project_wordcloud/deployment.md](../docs/project_wordcloud/deployment.md)** |
+| - 일반 배포 (소스 전용) | `.\deploy\build_deploy.ps1` → `wordcloud-project.zip` |
+| - 패키지 배포 (전체) | `.\deploy\build_deploy.ps1 -Package` → `wordcloud-internal/` |
 
 ---
 
