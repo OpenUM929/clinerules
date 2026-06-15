@@ -46,7 +46,7 @@
 | 규칙 | 문서 위치 |
 |------|-----------|
 | **wordcloud 프로젝트** | **[.clinerules/docs/project_wordcloud/README.md](../docs/project_wordcloud/README.md)** - 프로젝트 나침반 |
-| 전역 잠금 규칙 | [01.global-rules.md](01.global-rules.md) |
+| 전역 잠금 규칙 | [00-core/01.global-rules.md](00-core/01.global-rules.md) |
 | Legacy Protection | [01.legacy-protection.md](01.legacy-protection.md) |
 | 문서 가이드 | [02.documentation.md](02.documentation.md) |
 | 워크플로우 | [03.workflow.md](03.workflow.md) |
@@ -61,8 +61,8 @@
 | 영향도 분석 보고서 | [12-impact-analysis-report.md](12-impact-analysis-report.md) |
 | 요구사항 명확화 | [13-requirements-clarification.md](13-requirements-clarification.md) |
 | 시나리오 모음 | [docs/verification/scenarios/](docs/verification/scenarios/) |
-| 실행 트리거 | [03.triggers.md](03.triggers.md) |
-| Plan Mode | [04.plan-mode.md](04.plan-mode.md) |
+| 실행 트리거 | [00-core/02.triggers.md](00-core/02.triggers.md) |
+| Plan Mode | [00-core/03.plan-mode.md](00-core/03.plan-mode.md) |
 | 폴더 명칭 규칙 | [08-guideline-modification/04.folder-naming.md](core/08-guideline-modification/04.folder-naming.md) |
 | 누락된 규칙 분석 및 새 지침 추가 절차 | [08-guideline-modification/06.missing-rules-analysis.md](core/08-guideline-modification/06.missing-rules-analysis.md) |
 
