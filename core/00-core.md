@@ -45,7 +45,8 @@
 
 | 규칙 | 문서 위치 |
 |------|-----------|
-| **wordcloud 프로젝트** | **[.clinerules/docs/project_wordcloud/README.md](../docs/project_wordcloud/README.md)** - 프로젝트 나침반 |
+| **Modern Minimal Design System** | **[.clinerules/docs/ui/common/design-system/00-overview.md](../docs/ui/common/design-system/00-overview.md)** — UI 디자인 토큰 및 컴포넌트 명세 |
+| **wordcloud 프로젝트** | **[.clinerules/docs/project_wordcloud/README.md](../docs/project_wordcloud/README.md)** — 프로젝트 나침반 |
 | 전역 잠금 규칙 | [00-core/01.global-rules.md](00-core/01.global-rules.md) |
 | Legacy Protection | [01.legacy-protection.md](01.legacy-protection.md) |
 | 문서 가이드 | [02.documentation.md](02.documentation.md) |
