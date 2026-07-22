@@ -1,5 +1,7 @@
 # 데이터 수집 일정
 
+↑ [목록으로](../00-index.md)
+
 > **핵심 기능**: 주간/월간 단위로 데이터 수집 작업의 예정 및 실제 실행 상태를 히트맵 형태로 모니터링하고, 그룹별/Job별 상세 현황과 메모를 관리합니다.
 
 ---
@@ -17,7 +19,7 @@
 
 ### 2.1 전체 화면 구조
 
-<img src="images/collection-schedule-full.png" width="800" alt="수집 스케줄 전체 화면">
+<img src="images/collection-schedule-full.png" width="600" alt="수집 스케줄 전체 화면">
 
 ### 2.2 각 영역 상세 설명
 
@@ -46,7 +48,7 @@
 - `/api/collection_schedule?week_offset=N` API 호출
 - 응답 데이터로 캘린더 그리드 재렌더링
 
-<img src="images/collection-schedule-controls.png" width="800" alt="컨트롤 영역">
+<img src="images/collection-schedule-controls.png" width="600" alt="컨트롤 영역">
 
 #### ③ 캘린더 그리드 (`#calendar-grid`)
 
@@ -71,7 +73,7 @@
 | 진행중 | `.status-inprogress` | 배경: #fef9c3, 글자: #854d0e | 수집 진행 중 |
 | 예정 | `.status-scheduled` | 배경: #e5e7eb, 글자: #4b5563 | 아직 실행 전 |
 
-<img src="images/collection-schedule-calendar.png" width="800" alt="캘린더 그리드">
+<img src="images/collection-schedule-calendar.png" width="600" alt="캘린더 그리드">
 
 #### ④ 그룹 팝업 (`.popup`)
 
@@ -93,7 +95,7 @@
 
 #### ⑥ 그룹 메모 팝업 (`#memo-popup`)
 
-<img src="images/collection-schedule-memo-popup.png" width="800" alt="그룹 메모 팝업">
+<img src="images/collection-schedule-memo-popup.png" width="600" alt="그룹 메모 팝업">
 
 **표시 조건:** 그룹 셀의 `+` 버튼 클릭 (관리자만)
 **기능:**
@@ -108,7 +110,7 @@
 - 그룹 항목 색상 가이드 (상태별 색상 코드)
 - 상세 데이터 상태 가이드
 
-<img src="images/collection-schedule-settings-expanded.png" width="800" alt="설정 패널 (펼침)">
+<img src="images/collection-schedule-settings-expanded.png" width="600" alt="설정 패널 (펼침)">
 
 ---
 
@@ -224,7 +226,34 @@
 
 ---
 
-## 5. 모니터링 체크리스트
+## 5. 운영 시나리오
+
+> 각 단계에는 조작하는 **요소만 캡처한 이미지**를 붙인다(작성 지침 `DEVELOPMENT/02-image-capture.md`). 이미지는 `images/`에 저장.
+
+### 5.1 주간 수집 현황 점검 → 미수집 급증 대응
+
+- **상황/목표**: 주간 히트맵에서 미수집이 급증한 구간을 찾아 원인(스케줄/에이전트)을 조치한다.
+- **사전 조건**: `collection_schedule` 권한.
+- **단계**:
+  1. **주간 뷰(`#weekly-btn`)** 로 이번 주 현황 확인, 요약 통계에서 미수집 건수 확인.
+     <img src="images/collection-schedule-scn1-weekly.png" width="600" alt="주간 히트맵 요약">
+  2. 주황색(`.status-nodata`) 셀이 몰린 날짜를 찾는다.
+     <img src="images/collection-schedule-scn1-nodata.png" width="600" alt="미수집 셀 집중 구간">
+  3. 그룹 셀이면 클릭해 **그룹 팝업(`.popup`)** 에서 실패 Job을 특정.
+  4. 해당 Job의 원인을 [대시보드 이벤트 로그](01-dashboard.md)·에이전트 로그로 확인, 필요 시 `tb_con_mst` cron 점검.
+- **완료 확인**: 미수집 원인(스케줄 미등록/에이전트 장애)을 확정하고 조치 대상 확보.
+- **실패 시**: §7 자주 발생하는 문제 표 참조.
+
+### 5.2 그룹 메모로 인수인계 (관리자)
+
+- **상황/목표**: 특정 그룹의 이슈를 메모로 남겨 다음 담당자에게 인계.
+- **단계**: 그룹 셀 더블클릭 → **메모 팝업(`#memo-popup`)** 에 내용 입력 → 저장.
+  <img src="images/collection-schedule-scn2-memo.png" width="600" alt="그룹 메모 작성">
+- **완료 확인**: "메모가 저장되었습니다" 토스트 + 해당 그룹 셀에 메모 표시.
+
+---
+
+## 6. 모니터링 체크리스트
 
 - [ ] **전체 예정 건수**가 0이 아닌지 확인
 - [ ] **성공률**이 90% 이상인지 확인
@@ -235,7 +264,7 @@
 
 ---
 
-## 6. 자주 발생하는 문제
+## 7. 자주 발생하는 문제
 
 | 증상 | 원인 | 해결 방법 |
 |------|------|-----------|
@@ -248,9 +277,9 @@
 
 ---
 
-## 7. 관련 DB 테이블 및 쿼리
+## 8. 관련 DB 테이블 및 쿼리
 
-### 7.1 주요 테이블
+### 8.1 주요 테이블
 
 | 테이블 | 설명 |
 |--------|------|
@@ -260,7 +289,7 @@
 | `tb_grp_memo` | 그룹 메모 (그룹 ID, 날짜, 내용, 작성자) |
 | `tb_user_data_perm_auth_ctrl` | 사용자별 데이터 접근 권한 |
 
-### 7.2 스케줄 조회 API
+### 8.2 스케줄 조회 API
 
 ```
 GET /api/collection_schedule?view=weekly&week_offset=0
@@ -289,4 +318,6 @@ GET /api/collection_schedule?view=monthly&month_offset=0
 
 ---
 
-> 다음 문서: [03-chart-analysis.md](03-chart-analysis.md)
+---
+
+↑ [목록으로](../00-index.md) · [← 이전: 대시보드](01-dashboard.md) · [다음: 차트 분석 →](03-chart-analysis.md)

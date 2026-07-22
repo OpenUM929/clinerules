@@ -22,7 +22,7 @@
 - [ ] **1. models.py 먼저 읽기**: 참조하는 모델의 실제 필드 확인
 - [ ] **2. 기존 API 라우트 확인**: 중복 또는 충돌하는 라우트가 없는지 확인
 - [ ] **3. Blueprint 등록 확인**: `app.py`에 새 blueprint가 등록되었는지 확인
-- [ ] **4. Flask 서버 재시작**: 코드 변경 후 서버 재시작 및 로그 확인
+- [ ] **4. 서버 재시작/F5 판단**: 코드 유형별 재시작·F5 여부는 [../../docs/development/server-reload-guide.md](../../docs/development/server-reload-guide.md) 참조 (`.py`/설정/블루프린트는 재시작, 템플릿/정적은 F5)
 - [ ] **5. API 테스트**: curl 또는 브라우저로 직접 호출하여 응답 확인
 
 ### 프론트엔드 API 호출 수정 시

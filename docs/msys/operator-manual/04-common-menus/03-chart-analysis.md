@@ -17,7 +17,7 @@
 
 ### 2.1 전체 화면 구조
 
-<img src="images/chart-analysis-full.png" width="800" alt="차트 분석 전체 화면">
+<img src="images/chart-analysis-full.png" width="600" alt="차트 분석 전체 화면">
 
 ### 2.2 각 영역 상세 설명
 
@@ -58,7 +58,7 @@
 - 사용자 권한(`data_permissions`)에 따라 표시되는 Job이 필터링됩니다.
 - 체크박스 변경 시 차트 데이터가 자동으로 갱신됩니다.
 
-<img src="images/chart-analysis-filter-panel.png" width="800" alt="Job ID 선택 및 필터 패널">
+<img src="images/chart-analysis-filter-panel.png" width="600" alt="Job ID 선택 및 필터 패널">
 
 #### ④ 기간별 수집 성공률 차트 (`#success-rate-chart-card`)
 

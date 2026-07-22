@@ -17,7 +17,7 @@
 
 ### 2.1 전체 화면 구조
 
-<img src="images/card-summary-full.png" width="800" alt="카드 요약 전체 화면">
+<img src="images/card-summary-full.png" width="600" alt="카드 요약 전체 화면">
 
 ### 2.2 각 영역 상세 설명
 

@@ -1,5 +1,7 @@
 # 대시보드
 
+↑ [목록으로](../00-index.md)
+
 > **핵심 기능**: 수집 작업의 전반적인 현황을 한눈에 모니터링하고, Job ID별 상세 성공률 및 이벤트 로그를 조회합니다.
 
 ---
@@ -17,9 +19,7 @@
 
 ### 2.1 전체 화면 구조
 
-<img src="images/dashboard-full.png" width="800" alt="대시보드 전체 화면">
-
-### 2.2 각 영역 상세 설명
+<img src="images/dashboard-full.png" width="600" alt="대시보드 전체 화면">
 
 ### 2.2 각 영역 상세 설명
 
@@ -53,7 +53,7 @@
 - **계산 로직**: `summaryData.length` (CHRT_DSP_YN='N'으로 숨겨진 Job은 제외)
 - **아이콘**: ⚙️ (톱니바퀴)
 
-<img src="images/dashboard-summary-panel.png" width="800" alt="요약 패널">
+<img src="images/dashboard-summary-panel.png" width="600" alt="요약 패널">
 
 ##### 2.2.2 총 호출 건수 (`totalCollectionsCount`)
 
@@ -98,7 +98,7 @@
 | **반기 성공률** | `half_success / half_total` | 최근 6개월 기준 |
 | **연간 성공률** | `year_success / year_total` | 최근 1년 기준 |
 
-<img src="images/dashboard-job-details.png" width="800" alt="Job ID별 상세 현황 테이블">
+<img src="images/dashboard-job-details.png" width="600" alt="Job ID별 상세 현황 테이블">
 
 ##### Job ID 표시 로직
 
@@ -148,7 +148,7 @@ filteredData = allData.filter(item =>
 )
 ```
 
-<img src="images/dashboard-job-details-live.png" width="800" alt="실시간 검색 결과">
+<img src="images/dashboard-job-details-live.png" width="600" alt="실시간 검색 결과">
 
 ---
 
@@ -183,7 +183,7 @@ filteredData = allData.filter(item =>
 | AUTH_RESET_PW | 비밀번호 초기화 | 시스템 이벤트 | - |
 | AUTH_CHANGE_PW | 비밀번호 변경 | 시스템 이벤트 | - |
 
-<img src="images/dashboard-event-log.png" width="800" alt="이벤트 로그 (펼침)">
+<img src="images/dashboard-event-log.png" width="600" alt="이벤트 로그 (펼침)">
 
 ##### 표시 컬럼
 
@@ -327,11 +327,44 @@ filteredData = allData.filter(item =>
 - 저장할 데이터가 없으면 "저장할 이벤트 로그 데이터가 없습니다" 경고 표시
 - 저장 실패 시 "저장 실패" 표시 (2초 후 원래 텍스트로 복귀)
 
-<img src="images/dashboard-event-log-collapsed.png" width="800" alt="이벤트 로그 (접힘)">
+<img src="images/dashboard-event-log-collapsed.png" width="600" alt="이벤트 로그 (접힘)">
 
 ---
 
-## 5. 모니터링 체크리스트
+## 5. 운영 시나리오
+
+> 실제 운영 업무를 순서대로 재현한다. 각 단계에는 조작하는 **요소만 캡처한 이미지**를 붙인다(§2 캡처 규칙). 이미지는 `images/`에 아래 파일명으로 저장.
+
+### 5.1 아침 점검 — 야간 수집 결과 확인 및 실패 Job 대응
+
+- **상황/목표**: 매일 오전, 전일 야간 수집이 정상 완료됐는지 확인하고 실패한 Job을 조기에 발견·조치한다.
+- **사전 조건**: `dashboard` 권한 보유, 로그인 상태.
+- **단계**:
+  1. 상단 메뉴 → **대시보드** 진입. 요약 패널에서 **일간 성공률**을 확인한다.
+     <img src="images/dashboard-scn1-summary.png" width="600" alt="요약 패널 일간 성공률">
+     - 임계값(기본 95%) 미만이면 노란색 → 상세 확인 필요.
+  2. **Job ID별 상세 현황** 카드를 펼치고, **연속 실패(빨간색)** Job이 있는지 훑는다.
+     <img src="images/dashboard-scn1-jobrow-fail.png" width="600" alt="연속 실패 Job 행">
+  3. 해당 Job ID를 상세 테이블 **검색(`detailTableSearch`)** 에 입력해 좁힌다.
+     <img src="images/dashboard-scn1-search.png" width="600" alt="Job ID 검색">
+  4. **이벤트 로그** 카드를 펼쳐 그 Job의 최근 상태(CD902 장애/CD903 미수집)를 확인한다.
+     <img src="images/dashboard-scn1-eventlog.png" width="600" alt="이벤트 로그 상태 확인">
+  5. 필요 시 **이벤트 로그 저장(`save-event-log-btn`)** 으로 근거를 파일로 남긴다.
+- **완료 확인**: 실패 Job의 원인(상태 코드·시간)을 파악하고, 조치 대상 목록을 확보. 저장 시 `저장 완료: [파일경로]` 토스트 확인.
+- **실패 시 대응**: 성공률 0%·데이터 없음 등은 §7 자주 발생하는 문제 표 참조(수집 스케줄/에이전트 상태 점검은 [02-collection-schedule.md](02-collection-schedule.md) 연계).
+
+### 5.2 기간 지정 리포트 — 특정 구간 성공률 확인
+
+- **상황/목표**: 주간 보고를 위해 특정 기간의 수집 성공률을 확인한다.
+- **단계**:
+  1. **시작일(`startDate`)·종료일(`endDate`)** 을 지정하고 **조회** 클릭.
+     <img src="images/dashboard-scn2-daterange.png" width="600" alt="기간 지정 조회">
+  2. 요약 패널의 주간/월간 성공률과 총 호출 건수를 캡처해 보고에 사용.
+- **완료 확인**: "대시보드 요약 업데이트 완료" 토스트 + 숫자 갱신.
+
+---
+
+## 6. 모니터링 체크리스트
 
 - [ ] **총 Job ID 개수**가 예상 범위 내인지 확인 (보통 100~200개)
 - [ ] **총 호출 건수**가 0이 아닌지 확인
@@ -343,7 +376,7 @@ filteredData = allData.filter(item =>
 
 ---
 
-## 6. 자주 발생하는 문제
+## 7. 자주 발생하는 문제
 
 | 증상 | 원인 | 해결 방법 |
 |------|------|-----------|
@@ -356,9 +389,9 @@ filteredData = allData.filter(item =>
 
 ---
 
-## 7. 관련 DB 테이블 및 쿼리
+## 8. 관련 DB 테이블 및 쿼리
 
-### 7.1 주요 테이블
+### 8.1 주요 테이블
 
 | 테이블 | 설명 |
 |--------|------|
@@ -369,7 +402,7 @@ filteredData = allData.filter(item =>
 | `tb_icon` | 아이콘 마스터 |
 | `tb_user_data_perm_auth_ctrl` | 사용자별 데이터 접근 권한 |
 
-### 7.2 연속 실패 계산 쿼리
+### 8.2 연속 실패 계산 쿼리
 
 ```sql
 SELECT COUNT(*) as fail_count
@@ -383,7 +416,7 @@ FROM (
 WHERE status IN ('CD902', 'CD903')
 ```
 
-### 7.3 이벤트 로그 조회 쿼리
+### 8.3 이벤트 로그 조회 쿼리
 
 ```sql
 SELECT
@@ -400,4 +433,6 @@ ORDER BY EVNT_OCCR_TIME DESC
 
 ---
 
-> 다음 문서: [02-collection-schedule.md](02-collection-schedule.md)
+---
+
+↑ [목록으로](../00-index.md) · [다음: 수집 스케줄 →](02-collection-schedule.md)
