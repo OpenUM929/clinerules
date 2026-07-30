@@ -27,4 +27,4 @@
 
 - [mapper/README.md](README.md) - mapper 개요
 - [services/auth-service.md](../services/auth-service.md) - 인증 서비스
-- [dao/user-dao.md](user-dao.md) - 사용자 DAO
+- [dao/user-dao.md](../dao/user-dao.md) - 사용자 DAO

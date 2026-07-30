@@ -1,12 +1,12 @@
 # MSYS 전용 작성 특이사항
 
-> 나침반: [../DEVELOPMENT.md](../DEVELOPMENT.md) · 공용 작성 규칙 정본: [../../common/operator-manual/DEVELOPMENT.md](../../common/operator-manual/DEVELOPMENT.md)
+> 나침반: [../DEVELOPMENT.md](../DEVELOPMENT.md) · 공용 작성 규칙 정본: [../../common/operator-manual/DEVELOPMENT.md](../../../../common/operator-manual/DEVELOPMENT.md)
 
 > 이 문서는 **MSYS 프로젝트에만 해당하는** 작성 규칙·예시를 모은다. 다른 프로젝트는 이 내용을 이식하지 않는다(각자 실제 코드로 검증해 자신의 전용 문서를 채운다).
 
 ---
 
-## 1. 캡처 영역 예시 (공용 [02-image-capture.md](../../common/operator-manual/DEVELOPMENT/02-image-capture.md) §3 참고)
+## 1. 캡처 영역 예시 (공용 [02-image-capture.md](../../../../common/operator-manual/DEVELOPMENT/02-image-capture.md) §3 참고)
 
 | 메뉴 | 캡처 대상 영역 |
 |------|---------------|
@@ -20,7 +20,7 @@
 
 ## 2. 관리자 설정(mngr_sett) 작성 특이사항
 
-`05-mngr-sett.md`는 정보가 방대하므로 별도 파일(탭 하위파일 방식, [../../common/operator-manual/DEVELOPMENT/05-composition-nav.md](../../common/operator-manual/DEVELOPMENT/05-composition-nav.md))로 관리한다.
+`05-mngr-sett.md`는 정보가 방대하므로 별도 파일(탭 하위파일 방식, [../../common/operator-manual/DEVELOPMENT/05-composition-nav.md](../../../../common/operator-manual/DEVELOPMENT/05-composition-nav.md))로 관리한다.
 
 ### 2.1 추가 섹션 구조
 | 섹션 | 내용 |
@@ -36,7 +36,7 @@
 
 ---
 
-## 3. 상태코드 사전 예시 (공용 [03-content-rules.md](../../common/operator-manual/DEVELOPMENT/03-content-rules.md) §2 원칙 적용 사례)
+## 3. 상태코드 사전 예시 (공용 [03-content-rules.md](../../../../common/operator-manual/DEVELOPMENT/03-content-rules.md) §2 원칙 적용 사례)
 
 | 코드 | 의미 | 운영자 관점 |
 |------|------|------------|

@@ -69,4 +69,4 @@ JSON 기반 REST API 제공 (DataTables, Ajax 등)
 
 - [routes/README.md](README.md) - routes 개요
 - [services/README.md](../services/README.md) - 비즈니스 로직
-- [00-core.md](../../00-core.md) - 나침반
+- [00-core.md](../../../common/core/00-core.md) - 나침반

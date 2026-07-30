@@ -25,5 +25,5 @@
 - 권한: mngr_sett 권한 필요
 
 ## 관련 문서
-- [mngr_sett.md](../msys/templates/mngr_sett.md) - 관리 페이지 패턴
-- [04.design-change.md](../../04.design-change.md) - UI 변경 규칙
+- [mngr_sett.md](../templates/mngr_sett.md) - 관리 페이지 패턴
+- [04.design-change.md](../../../common/core/04-design-change.md) - UI 변경 규칙

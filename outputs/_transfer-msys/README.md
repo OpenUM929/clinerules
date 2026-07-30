@@ -21,8 +21,8 @@
 
 | 작업 유형 | 참조 문서 |
 |-----------|----------|
-| 시간/날짜 처리 | [time-handling-rules.md](../development/time-handling-rules.md) (공통) |
-| 필드명/네이밍 | [field-naming-convention.md](../development/field-naming-convention.md) (공통) |
+| 시간/날짜 처리 | [time-handling-rules.md](../../common/development/time-handling-rules.md) (공통) |
+| 필드명/네이밍 | [field-naming-convention.md](../../common/development/field-naming-convention.md) (공통) |
 | 공통 모듈 | [file-structure.md](file-structure.md) |
 | 데이터베이스 | [database.md](database.md) |
 | 운영자 메뉴얼 작성/수정 | [operator-manual/DEVELOPMENT.md](operator-manual/DEVELOPMENT.md) |
@@ -31,6 +31,6 @@
 
 ## 관련 지침
 
-- [00-core.md](../../00-core.md) - 코어 규칙
-- [01.legacy-protection.md](../../01.legacy-protection.md) - 레거시 보호
-- [03.workflow.md](../../03.workflow.md) - 워크플로우
+- [00-core.md](../../common/core/00-core.md) - 코어 규칙
+- [01.legacy-protection.md](../../common/core/01-legacy-protection.md) - 레거시 보호
+- [03.workflow.md](../../common/core/03-workflow.md) - 워크플로우

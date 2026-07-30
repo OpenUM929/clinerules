@@ -15,8 +15,8 @@
 | 단계 | 규칙 | 실행 내용 |
 |------|------|----------|
 | 1 | 00-core.md | 작업 유형 "기능 문제 분석/디버깅" 확인 |
-| 2 | 03.workflow.md | pipeline-analysis.md 참조 |
-| 3 | docs/ui/screen-domain.md | 분석 페이지 파일 확인: `web/templates/index.html` |
+| 2 | 03-workflow.md | pipeline-analysis.md 참조 |
+| 3 | common/ui/screen-domain.md | 분석 페이지 파일 확인: `web/templates/index.html` |
 | 4 | 파일 분석 | api_routes.py, wordcloud_generator.py 확인 |
 | 5 | batch_processor.py와 비교 | 워드클라우드 옵션 차이점 파악 |
 
@@ -34,9 +34,9 @@
 
 | 단계 | 규칙 | 실행 내용 |
 |------|------|----------|
-| 1 | 00-core.md | "공통 UI/디자인" → 04.design-change.md |
-| 2 | 04.design-change.md | screen-domain.md 참조 |
-| 3 | docs/ui/screen-domain.md | 배치 페이지: `web/templates/metadata_batch.html` |
+| 1 | 00-core.md | "공통 UI/디자인" → 04-design-change.md |
+| 2 | 04-design-change.md | screen-domain.md 참조 |
+| 3 | common/ui/screen-domain.md | 배치 페이지: `web/templates/metadata_batch.html` |
 | 4 | 분석 | 현재 디자인 구조 파악 후 변경 계획 |
 
 ### 결과
@@ -54,9 +54,9 @@
 | 단계 | 규칙 | 실행 내용 |
 |------|------|----------|
 | 1 | 00-core.md | "새 기능 추가" 해당 확인 |
-| 2 | 01.legacy-protection.md | 기존 코드 보호 확인 |
-| 3 | 03.workflow.md | 영향도 분석 (impact-analysis-guide.md) |
-| 4 | docs/ui/screen-domain.md | 새 화면 정의 필요 확인 |
+| 2 | 01-legacy-protection.md | 기존 코드 보호 확인 |
+| 3 | 03-workflow.md | 영향도 분석 (impact-analysis-guide.md) |
+| 4 | common/ui/screen-domain.md | 새 화면 정의 필요 확인 |
 
 ### 결과
 ✅ 규칙 순서대로 진행 가능
@@ -91,8 +91,8 @@
 
 | 단계 | 규칙 | 실행 내용 |
 |------|------|----------|
-| 1 | 00-core.md | "기능 문제 분석/디버깅" → 03.workflow.md |
-| 2 | 03.workflow.md | pipeline-analysis.md 참조 |
+| 1 | 00-core.md | "기능 문제 분석/디버깅" → 03-workflow.md |
+| 2 | 03-workflow.md | pipeline-analysis.md 참조 |
 | 3 | 분석 | api_routes.py 엔드포인트 확인 |
 | 4 | 결과 | 프론트엔드 fetch 경로 vs 백엔드 엔드포인트 불일치 발견 |
 
@@ -105,7 +105,7 @@
 
 | 구분 | 이전 | 이후 |
 |------|------|------|
-| 구체적 파일 경로 | "docs/ui/common/" 폴더만 указа | 실제 파일 경로 명시 (index.html 등) |
+| 구체적 파일 경로 | "common/ui/common/" 폴더만 указа | 실제 파일 경로 명시 (index.html 등) |
 | 순환 참조 | 04 ↔ docs/core/design-change-workflow.md 중복 | 통합 및 중복 제거 |
 | 나침반 역할 | 방향만 제시 | 구체적 파일까지 안내 |
 | 시나리오 테스트 | 누락 | 각 문서에 시나리오 추가 |

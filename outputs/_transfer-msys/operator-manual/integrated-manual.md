@@ -310,7 +310,7 @@ cp -r /data/external_data_monitoring/msys_backup_YYYYMMDD/* /data/external_data_
 
 ### 5.1.2.1 전체 화면 구조
 
-![대시보드 전체 화면](images/dashboard-full.png)
+![대시보드 전체 화면](04-common-menus/images/dashboard-full.png)
 
 ### 5.1.2.2 각 영역 상세 설명
 
@@ -344,7 +344,7 @@ cp -r /data/external_data_monitoring/msys_backup_YYYYMMDD/* /data/external_data_
 - **계산 로직**: `summaryData.length` (CHRT_DSP_YN='N'으로 숨겨진 Job은 제외)
 - **아이콘**: ⚙️ (톱니바퀴)
 
-![요약 패널](images/dashboard-summary-panel.png)
+![요약 패널](04-common-menus/images/dashboard-summary-panel.png)
 
 ##### 2.2.2 총 호출 건수 (`totalCollectionsCount`)
 
@@ -389,7 +389,7 @@ cp -r /data/external_data_monitoring/msys_backup_YYYYMMDD/* /data/external_data_
 | **반기 성공률** | `half_success / half_total` | 최근 6개월 기준 |
 | **연간 성공률** | `year_success / year_total` | 최근 1년 기준 |
 
-![Job ID별 상세 현황 테이블](images/dashboard-job-details.png)
+![Job ID별 상세 현황 테이블](04-common-menus/images/dashboard-job-details.png)
 
 ##### Job ID 표시 로직
 
@@ -439,7 +439,7 @@ filteredData = allData.filter(item =>
 )
 ```
 
-![실시간 검색 결과](images/dashboard-job-details-search.png)
+![실시간 검색 결과](04-common-menus/images/dashboard-job-details-search.png)
 
 ---
 
@@ -474,7 +474,7 @@ filteredData = allData.filter(item =>
 | AUTH_RESET_PW | 비밀번호 초기화 | 시스템 이벤트 | - |
 | AUTH_CHANGE_PW | 비밀번호 변경 | 시스템 이벤트 | - |
 
-![이벤트 로그 (펼침)](images/dashboard-event-log.png)
+![이벤트 로그 (펼침)](04-common-menus/images/dashboard-event-log.png)
 
 ##### 표시 컬럼
 
@@ -506,7 +506,7 @@ filteredData = allData.filter(item =>
 
 ### 5.1.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/01-dashboard-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/01-dashboard-data-flow.png)
 
 ### 5.1.3.2 오늘 데이터 처리 상세
 
@@ -593,7 +593,7 @@ filteredData = allData.filter(item =>
 - 저장할 데이터가 없으면 "저장할 이벤트 로그 데이터가 없습니다" 경고 표시
 - 저장 실패 시 "저장 실패" 표시 (2초 후 원래 텍스트로 복귀)
 
-![이벤트 로그 (접힘)](images/dashboard-event-log-collapsed.png)
+![이벤트 로그 (접힘)](04-common-menus/images/dashboard-event-log-collapsed.png)
 
 ---
 
@@ -607,24 +607,24 @@ filteredData = allData.filter(item =>
 - **사전 조건**: `dashboard` 권한 보유, 로그인 상태.
 - **단계**:
   1. 상단 메뉴 → **대시보드** 진입. 요약 패널에서 **일간 성공률**을 확인한다.
-     ![요약 패널 일간 성공률](images/dashboard-summary-panel.png)
+     ![요약 패널 일간 성공률](04-common-menus/images/dashboard-summary-panel.png)
      - 임계값(기본 95%) 미만이면 노란색 → 상세 확인 필요.
   2. **Job ID별 상세 현황** 카드를 펼치고, **연속 실패(빨간색)** Job이 있는지 훑는다.
-     ![연속 실패 Job 행](images/dashboard-job-details.png)
+     ![연속 실패 Job 행](04-common-menus/images/dashboard-job-details.png)
   3. 해당 Job ID를 상세 테이블 **검색(`detailTableSearch`)** 에 입력해 좁힌다.
-     ![Job ID 검색](images/dashboard-job-details-search.png)
+     ![Job ID 검색](04-common-menus/images/dashboard-job-details-search.png)
   4. **이벤트 로그** 카드를 펼쳐 그 Job의 최근 상태(CD902 장애/CD903 미수집)를 확인한다.
-     ![이벤트 로그 상태 확인](images/dashboard-event-log.png)
+     ![이벤트 로그 상태 확인](04-common-menus/images/dashboard-event-log.png)
   5. 필요 시 **이벤트 로그 저장(`save-event-log-btn`)** 으로 근거를 파일로 남긴다.
 - **완료 확인**: 실패 Job의 원인(상태 코드·시간)을 파악하고, 조치 대상 목록을 확보. 저장 시 `저장 완료: [파일경로]` 토스트 확인.
-- **실패 시 대응**: 성공률 0%·데이터 없음 등은 §7 자주 발생하는 문제 표 참조(수집 스케줄/에이전트 상태 점검은 [02-collection-schedule.md](02-collection-schedule.md) 연계).
+- **실패 시 대응**: 성공률 0%·데이터 없음 등은 §7 자주 발생하는 문제 표 참조(수집 스케줄/에이전트 상태 점검은 [02-collection-schedule.md](04-common-menus/02-collection-schedule.md) 연계).
 
 ### 5.1.5.2 기간 지정 리포트 — 특정 구간 성공률 확인
 
 - **상황/목표**: 주간 보고를 위해 특정 기간의 수집 성공률을 확인한다.
 - **단계**:
   1. **시작일(`startDate`)·종료일(`endDate`)** 을 지정하고 **조회** 클릭.
-     ![기간 지정 조회](images/dashboard-date-selection.png)
+     ![기간 지정 조회](04-common-menus/images/dashboard-date-selection.png)
   2. 요약 패널의 주간/월간 성공률과 총 호출 건수를 캡처해 보고에 사용.
 - **완료 확인**: "대시보드 요약 업데이트 완료" 토스트 + 숫자 갱신.
 
@@ -727,7 +727,7 @@ ORDER BY EVNT_OCCR_TIME DESC
 
 ### 5.2.2.1 전체 화면 구조
 
-![수집 스케줄 전체 화면](images/collection-schedule-full.png)
+![수집 스케줄 전체 화면](04-common-menus/images/collection-schedule-full.png)
 
 ### 5.2.2.2 각 영역 상세 설명
 
@@ -756,7 +756,7 @@ ORDER BY EVNT_OCCR_TIME DESC
 - `/api/collection_schedule?week_offset=N` API 호출
 - 응답 데이터로 캘린더 그리드 재렌더링
 
-![컨트롤 영역](images/collection-schedule-controls.png)
+![컨트롤 영역](04-common-menus/images/collection-schedule-controls.png)
 
 #### ③ 캘린더 그리드 (`#calendar-grid`)
 
@@ -781,11 +781,11 @@ ORDER BY EVNT_OCCR_TIME DESC
 | 진행중 | `.status-inprogress` | 배경: #fef9c3, 글자: #854d0e | 수집 진행 중 |
 | 예정 | `.status-scheduled` | 배경: #e5e7eb, 글자: #4b5563 | 아직 실행 전 |
 
-![캘린더 그리드](images/collection-schedule-calendar.png)
+![캘린더 그리드](04-common-menus/images/collection-schedule-calendar.png)
 
 #### ④ 그룹 팝업 (`.popup`)
 
-![그룹 팝업](images/collection-schedule-group-popup.png)
+![그룹 팝업](04-common-menus/images/collection-schedule-group-popup.png)
 
 **표시 조건:** 그룹화된 Job 셀 클릭
 **표시 내용:**
@@ -803,7 +803,7 @@ ORDER BY EVNT_OCCR_TIME DESC
 
 #### ⑥ 그룹 메모 팝업 (`#memo-popup`)
 
-![그룹 메모 팝업](images/collection-schedule-memo-popup.png)
+![그룹 메모 팝업](04-common-menus/images/collection-schedule-memo-popup.png)
 
 **표시 조건:** 그룹 셀의 `+` 버튼 클릭 (관리자만)
 **기능:**
@@ -818,7 +818,7 @@ ORDER BY EVNT_OCCR_TIME DESC
 - 그룹 항목 색상 가이드 (상태별 색상 코드)
 - 상세 데이터 상태 가이드
 
-![설정 패널 (펼침)](images/collection-schedule-settings-expanded.png)
+![설정 패널 (펼침)](04-common-menus/images/collection-schedule-settings-expanded.png)
 
 ---
 
@@ -826,7 +826,7 @@ ORDER BY EVNT_OCCR_TIME DESC
 
 ### 5.2.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/02-collection-schedule-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/02-collection-schedule-data-flow.png)
 
 ### 5.2.3.2 주요 처리 단계
 
@@ -921,11 +921,11 @@ ORDER BY EVNT_OCCR_TIME DESC
 - **사전 조건**: `collection_schedule` 권한.
 - **단계**:
   1. **주간 뷰(`#weekly-btn`)** 로 이번 주 현황 확인, 요약 통계에서 미수집 건수 확인.
-     ![주간 히트맵 요약](images/collection-schedule-weekly-view.png)
+     ![주간 히트맵 요약](04-common-menus/images/collection-schedule-weekly-view.png)
   2. 주황색(`.status-nodata`) 셀이 몰린 날짜를 찾는다.
-     ![미수집 셀 집중 구간](images/collection-schedule-weekly-view.png)
+     ![미수집 셀 집중 구간](04-common-menus/images/collection-schedule-weekly-view.png)
   3. 그룹 셀이면 클릭해 **그룹 팝업(`.popup`)** 에서 실패 Job을 특정.
-  4. 해당 Job의 원인을 [대시보드 이벤트 로그](01-dashboard.md)·에이전트 로그로 확인, 필요 시 `tb_con_mst` cron 점검.
+  4. 해당 Job의 원인을 [대시보드 이벤트 로그](04-common-menus/01-dashboard.md)·에이전트 로그로 확인, 필요 시 `tb_con_mst` cron 점검.
 - **완료 확인**: 미수집 원인(스케줄 미등록/에이전트 장애)을 확정하고 조치 대상 확보.
 - **실패 시**: §7 자주 발생하는 문제 표 참조.
 
@@ -933,7 +933,7 @@ ORDER BY EVNT_OCCR_TIME DESC
 
 - **상황/목표**: 특정 그룹의 이슈를 메모로 남겨 다음 담당자에게 인계.
 - **단계**: 그룹 셀 더블클릭 → **메모 팝업(`#memo-popup`)** 에 내용 입력 → 저장.
-  ![그룹 메모 작성](images/collection-schedule-memo-popup.png)
+  ![그룹 메모 작성](04-common-menus/images/collection-schedule-memo-popup.png)
 - **완료 확인**: "메모가 저장되었습니다" 토스트 + 해당 그룹 셀에 메모 표시.
 
 ---
@@ -1030,7 +1030,7 @@ GET /api/collection_schedule?view=monthly&month_offset=0
 
 ### 5.3.2.1 전체 화면 구조
 
-![차트 분석 전체 화면](images/chart-analysis-full.png)
+![차트 분석 전체 화면](04-common-menus/images/chart-analysis-full.png)
 
 ### 5.3.2.2 각 영역 상세 설명
 
@@ -1071,7 +1071,7 @@ GET /api/collection_schedule?view=monthly&month_offset=0
 - 사용자 권한(`data_permissions`)에 따라 표시되는 Job이 필터링됩니다.
 - 체크박스 변경 시 차트 데이터가 자동으로 갱신됩니다.
 
-![Job ID 선택 및 필터 패널](images/chart-analysis-filter-panel.png)
+![Job ID 선택 및 필터 패널](04-common-menus/images/chart-analysis-filter-panel.png)
 
 #### ④ 기간별 수집 성공률 차트 (`#success-rate-chart-card`)
 
@@ -1133,7 +1133,7 @@ GET /api/collection_schedule?view=monthly&month_offset=0
 
 ### 5.3.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/03-chart-analysis-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/03-chart-analysis-data-flow.png)
 
 ### 5.3.3.2 성공률 계산 로직
 
@@ -1260,7 +1260,7 @@ GET /api/chart_data?start_date=2025-01-01&end_date=2025-12-31&job_ids=CD101,CD10
 
 ---
 
-> 다음 문서: [04-data-analysis.md](04-data-analysis.md)
+> 다음 문서: [04-data-analysis.md](04-common-menus/04-data-analysis.md)
 
 
 ---pb---
@@ -1286,7 +1286,7 @@ GET /api/chart_data?start_date=2025-01-01&end_date=2025-12-31&job_ids=CD101,CD10
 
 ### 5.4.2.1 전체 화면 구조
 
-![데이터 분석 전체 화면](images/data-analysis-full.png)
+![데이터 분석 전체 화면](04-common-menus/images/data-analysis-full.png)
 
 ### 5.4.2.2 각 영역 상세 설명
 
@@ -1367,7 +1367,7 @@ GET /api/chart_data?start_date=2025-01-01&end_date=2025-12-31&job_ids=CD101,CD10
 
 ### 5.4.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/04-data-analysis-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/04-data-analysis-data-flow.png)
 
 ### 5.4.3.2 주요 지표 계산 로직
 
@@ -1510,7 +1510,7 @@ GET /api/data_analysis?start_date=2025-01-01&end_date=2025-12-31&job_id=CD101&er
 
 ---
 
-> 다음 문서: [05-data-spec.md](05-data-spec.md)
+> 다음 문서: [05-data-spec.md](04-common-menus/05-data-spec.md)
 
 
 ---pb---
@@ -1536,7 +1536,7 @@ GET /api/data_analysis?start_date=2025-01-01&end_date=2025-12-31&job_id=CD101&er
 
 ### 5.5.2.1 전체 화면 구조
 
-![데이터 명세서 전체 화면](images/data-spec-full.png)
+![데이터 명세서 전체 화면](04-common-menus/images/data-spec-full.png)
 
 ### 5.5.2.2 각 영역 상세 설명
 
@@ -1629,7 +1629,7 @@ GET /api/data_analysis?start_date=2025-01-01&end_date=2025-12-31&job_id=CD101&er
 
 ### 5.5.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/05-data-spec-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/05-data-spec-data-flow.png)
 
 ### 5.5.3.2 명세서 저장 절차
 
@@ -1701,7 +1701,7 @@ GET /api/data_analysis?start_date=2025-01-01&end_date=2025-12-31&job_id=CD101&er
 
 ### 5.5.4.2 명세서 직접 등록
 
-![명세서 등록 모달](images/data-spec-add-modal.png)
+![명세서 등록 모달](04-common-menus/images/data-spec-add-modal.png)
 
 **조작 절차:**
 1. `명세서 목록` 카드에서 `수동으로 새로 등록` 버튼 클릭
@@ -1788,7 +1788,7 @@ POST   /api/data_spec/analyze-url  # URL 분석
 
 ---
 
-> 다음 문서: [06-card-summary.md](06-card-summary.md)
+> 다음 문서: [06-card-summary.md](04-common-menus/06-card-summary.md)
 
 
 ---pb---
@@ -1814,7 +1814,7 @@ POST   /api/data_spec/analyze-url  # URL 분석
 
 ### 5.6.2.1 전체 화면 구조
 
-![카드 요약 전체 화면](images/card-summary-full.png)
+![카드 요약 전체 화면](04-common-menus/images/card-summary-full.png)
 
 ### 5.6.2.2 각 영역 상세 설명
 
@@ -1877,7 +1877,7 @@ POST   /api/data_spec/analyze-url  # URL 분석
 
 ### 5.6.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/06-card-summary-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/06-card-summary-data-flow.png)
 
 ### 5.6.3.2 주요 지표 계산
 
@@ -1985,7 +1985,7 @@ GET /api/card_summary
 
 ---
 
-> 다음 문서: [07-mapping.md](07-mapping.md)
+> 다음 문서: [07-mapping.md](04-common-menus/07-mapping.md)
 
 
 ---pb---
@@ -2013,7 +2013,7 @@ GET /api/card_summary
 
 > 📷 *화면 캡처 미보유 — 운영 환경에서 재캡처 필요. 아래는 구조 파악용 와이어프레임(실제 화면 배치와 세부 스타일은 다를 수 있음).*
 
-![전체 화면 구조](images/07-mapping-layout.png)
+![전체 화면 구조](04-common-menus/images/07-mapping-layout.png)
 
 ### 5.7.2.2 각 영역 상세 설명
 
@@ -2064,7 +2064,7 @@ GET /api/card_summary
 
 ### 5.7.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/07-mapping-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/07-mapping-data-flow.png)
 
 ### 5.7.3.2 매핑 조회 절차
 
@@ -2201,7 +2201,7 @@ GET    /api/unmapped-columns      # 매핑되지 않은 신규 컬럼 조회
 
 ---
 
-> 다음 문서: [08-api-key-mngr.md](08-api-key-mngr.md)
+> 다음 문서: [08-api-key-mngr.md](04-common-menus/08-api-key-mngr.md)
 
 
 ---pb---
@@ -2228,10 +2228,10 @@ GET    /api/unmapped-columns      # 매핑되지 않은 신규 컬럼 조회
 
 | 탭 | 파일 | 설명 |
 |----|------|------|
-| API 키 관리 | [08-api-key-mngr.tab1.md](08-api-key-mngr.tab1.md) | API 키 목록 조회/등록/수정/삭제, 메일 테스트 |
-| 기간 차트 | [08-api-key-mngr.tab2.md](08-api-key-mngr.tab2.md) | API 키 유효기간 간트 차트 시각화 |
-| 위험군 | [08-api-key-mngr.tab3.md](08-api-key-mngr.tab3.md) | 1개월 이내 만료 API 키 관리 |
-| 설정 | [08-api-key-mngr.tab4.md](08-api-key-mngr.tab4.md) | 메일 알림 및 스케줄 설정 |
+| API 키 관리 | [08-api-key-mngr.tab1.md](04-common-menus/08-api-key-mngr.tab1.md) | API 키 목록 조회/등록/수정/삭제, 메일 테스트 |
+| 기간 차트 | [08-api-key-mngr.tab2.md](04-common-menus/08-api-key-mngr.tab2.md) | API 키 유효기간 간트 차트 시각화 |
+| 위험군 | [08-api-key-mngr.tab3.md](04-common-menus/08-api-key-mngr.tab3.md) | 1개월 이내 만료 API 키 관리 |
+| 설정 | [08-api-key-mngr.tab4.md](04-common-menus/08-api-key-mngr.tab4.md) | 메일 알림 및 스케줄 설정 |
 
 ---
 
@@ -2239,7 +2239,7 @@ GET    /api/unmapped-columns      # 매핑되지 않은 신규 컬럼 조회
 
 ### 5.8.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/08-api-key-mngr-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/08-api-key-mngr-data-flow.png)
 
 ### 5.8.3.2 API 키 상태 분류 기준
 
@@ -2324,7 +2324,7 @@ POST   /api/api_key_mngr/settings     # 설정 저장
 
 > **기준 버전 / 최종 확인일**: v1.1.0 · 2026-07-22
 
-> 소속 메뉴: [API 키 관리](08-api-key-mngr.md) · 탭 ① (`content0`)
+> 소속 메뉴: [API 키 관리](04-common-menus/08-api-key-mngr.md) · 탭 ① (`content0`)
 
 ---
 
@@ -2412,7 +2412,7 @@ POST   /api/api_key_mngr/settings     # 설정 저장
 
 > **기준 버전 / 최종 확인일**: v1.1.0 · 2026-07-22
 
-> 소속 메뉴: [API 키 관리](08-api-key-mngr.md) · 탭 ② (`content1`)
+> 소속 메뉴: [API 키 관리](04-common-menus/08-api-key-mngr.md) · 탭 ② (`content1`)
 
 ---
 
@@ -2435,7 +2435,7 @@ POST   /api/api_key_mngr/settings     # 설정 저장
 
 > **기준 버전 / 최종 확인일**: v1.1.0 · 2026-07-22
 
-> 소속 메뉴: [API 키 관리](08-api-key-mngr.md) · 탭 ③ (`content2`)
+> 소속 메뉴: [API 키 관리](04-common-menus/08-api-key-mngr.md) · 탭 ③ (`content2`)
 
 ---
 
@@ -2461,7 +2461,7 @@ POST   /api/api_key_mngr/settings     # 설정 저장
 
 > **기준 버전 / 최종 확인일**: v1.1.0 · 2026-07-22
 
-> 소속 메뉴: [API 키 관리](08-api-key-mngr.md) · 탭 ④ (`content3`)
+> 소속 메뉴: [API 키 관리](04-common-menus/08-api-key-mngr.md) · 탭 ④ (`content3`)
 
 ---
 
@@ -2533,7 +2533,7 @@ POST   /api/api_key_mngr/settings     # 설정 저장
 
 ### 5.9.2.1 전체 화면 구조
 
-![잔디 모니터링 전체 화면](images/jandi-full.png)
+![잔디 모니터링 전체 화면](04-common-menus/images/jandi-full.png)
 
 ### 5.9.2.2 각 영역 상세 설명
 
@@ -2588,7 +2588,7 @@ POST   /api/api_key_mngr/settings     # 설정 저장
 
 ### 5.9.3.1 전체 데이터 흐름도
 
-![전체 데이터 흐름도](images/09-jandi-data-flow.png)
+![전체 데이터 흐름도](04-common-menus/images/09-jandi-data-flow.png)
 
 ### 5.9.3.2 히트맵 데이터 집계
 
@@ -2711,7 +2711,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 ---
 
-> 다음 문서: [10-raw-data.md](10-raw-data.md)
+> 다음 문서: [10-raw-data.md](04-common-menus/10-raw-data.md)
 
 
 ---pb---
@@ -2739,7 +2739,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 > 📷 *화면 캡처 미보유 — 운영 환경에서 재캡처 필요. 아래는 구조 파악용 와이어프레임(실제 화면 배치와 세부 스타일은 다를 수 있음).*
 
-![전체 화면 구조](images/10-raw-data-layout.png)
+![전체 화면 구조](04-common-menus/images/10-raw-data-layout.png)
 
 ### 5.10.2.2 각 영역 상세 설명
 
@@ -2808,7 +2808,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 ---
 
-> 다음 문서: [11-admin.md](11-admin.md)
+> 다음 문서: [11-admin.md](04-common-menus/11-admin.md)
 
 
 ---pb---
@@ -2836,7 +2836,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 > 📷 *화면 캡처 미보유 — 운영 환경에서 재캡처 필요. 아래는 구조 파악용 와이어프레임(실제 화면 배치와 세부 스타일은 다를 수 있음).*
 
-![전체 화면 구조](images/11-admin-layout.png)
+![전체 화면 구조](04-common-menus/images/11-admin-layout.png)
 
 ### 5.11.2.2 각 영역 상세 설명
 
@@ -2924,7 +2924,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 ---
 
-> 다음 문서: [12-api-test.md](12-api-test.md)
+> 다음 문서: [12-api-test.md](04-common-menus/12-api-test.md)
 
 
 ---pb---
@@ -2952,7 +2952,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 > 📷 *화면 캡처 미보유 — 운영 환경에서 재캡처 필요. 아래는 구조 파악용 와이어프레임(실제 화면 배치와 세부 스타일은 다를 수 있음).*
 
-![전체 화면 구조](images/12-api-test-layout.png)
+![전체 화면 구조](04-common-menus/images/12-api-test-layout.png)
 
 ### 5.12.2.2 각 영역 상세 설명
 
@@ -3022,7 +3022,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 ---
 
-> 다음 문서: [13-external-links.md](13-external-links.md)
+> 다음 문서: [13-external-links.md](04-common-menus/13-external-links.md)
 
 
 ---pb---
@@ -3074,7 +3074,7 @@ GET /api/jandi?start_date=2025-01-01&end_date=2025-12-31
 
 ---
 
-> 메뉴얼 계속: [05-mngr-sett.md](../05-mngr-sett.md)
+> 메뉴얼 계속: [05-mngr-sett.md](05-mngr-sett.md)
 
 
 ---pb---
@@ -3812,7 +3812,7 @@ SELECT * FROM tb_user;
 
 ---
 
-> 다음 문서: [config-reference.md](config-reference.md)
+> 다음 문서: [config-reference.md](appendix/config-reference.md)
 
 
 ---pb---

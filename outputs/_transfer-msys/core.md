@@ -6,8 +6,8 @@
 
 | 문서 | 설명 |
 |------|------|
-| [admin-page-rules.md](admin-page-rules.md) | 관리 페이지 규칙 |
-| [design-change-workflow.md](design-change-workflow.md) | 디자인 변경 작업 경로 |
+| [admin-page-rules.md](core/admin-page-rules.md) | 관리 페이지 규칙 |
+| [design-change-workflow.md](core/design-change-workflow.md) | 디자인 변경 작업 경로 |
 
 ## 참조
 

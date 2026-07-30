@@ -1,6 +1,6 @@
 # MSYS 세부 문서 작성 가이드 (프로젝트 나침반)
 
-> ⚠️ **공용 작성 규칙·양식·템플릿은 [../../common/operator-manual/DEVELOPMENT.md](../../common/operator-manual/DEVELOPMENT.md) 가 정본이다(모든 프로젝트 공용 단일 소스, 2026-07-27 이관).**
+> ⚠️ **공용 작성 규칙·양식·템플릿은 [../../common/operator-manual/DEVELOPMENT.md](../../../common/operator-manual/DEVELOPMENT.md) 가 정본이다(모든 프로젝트 공용 단일 소스, 2026-07-27 이관).**
 > 이 파일은 **MSYS 전용 잔여 사항**만 안내한다. 작성 전 반드시 공용 나침반을 먼저 열어 00~08 원자 문서를 확인한 뒤, 아래 MSYS 전용 문서를 참고한다.
 
 ---
@@ -13,7 +13,7 @@
 
 ## 빌드
 
-MSYS 운영/개발 메뉴얼 통합 빌드는 공용 스크립트를 사용한다(공용 나침반 [06-integrated-build.md](../../common/operator-manual/DEVELOPMENT/06-integrated-build.md) §2 참고):
+MSYS 운영/개발 메뉴얼 통합 빌드는 공용 스크립트를 사용한다(공용 나침반 [06-integrated-build.md](../../../common/operator-manual/DEVELOPMENT/06-integrated-build.md) §2 참고):
 
 ```powershell
 cd .clinerules/docs/msys/operator-manual

@@ -55,7 +55,7 @@ operator-manual/
 └── integrated-manual.html             # ★ 통합본(A4 HTML, 브라우저→인쇄→PDF)
 ```
 
-> `print.css`·`build_integrated.py`는 **모든 프로젝트 공용 단일 사본**으로 `docs/common/operator-manual/build/`에 있다(2026-07-27 이관, 작성 지침: [../common/operator-manual/DEVELOPMENT/06-integrated-build.md](../common/operator-manual/DEVELOPMENT/06-integrated-build.md)).
+> `print.css`·`build_integrated.py`는 **모든 프로젝트 공용 단일 사본**으로 `docs/common/operator-manual/build/`에 있다(2026-07-27 이관, 작성 지침: [../common/operator-manual/DEVELOPMENT/06-integrated-build.md](../../../common/operator-manual/DEVELOPMENT/06-integrated-build.md)).
 
 > **탭 보유 메뉴 하위파일**: 탭이 있는 메뉴는 `NN-menu.md`(구성+탭설명) + `NN-menu.tabN.md`(탭별)로 분리. 예: `04-common-menus/08-api-key-mngr.md` + `08-api-key-mngr.tab1~4.md`.
 
