@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>운영자 메뉴얼 (통합)</title>
+<style>/* MSYS 운영자 메뉴얼 — A4 인쇄 최적화 스타일시트
+ * 통합 메뉴얼(integrated-manual.html) 및 개별 md 미리보기에 적용.
+ * 외부 의존성 없이 브라우저 "인쇄 → PDF 저장"로 A4 출력.
+ */
+
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans CJK KR", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  color: #1a1a1a;
+}
+
+.container {
+  max-width: 170mm;   /* A4 가용 가로 ≈ 640px @96dpi */
+  margin: 0 auto;
+}
+
+/* 페이지 나누기 마커 */
+.pagebreak {
+  break-before: page;
+  page-break-before: always;
+}
+
+/* 이미지: A4 폭 상한 */
+img {
+  max-width: 640px;
+  height: auto;
+  display: block;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+}
+
+/* 표: A4 폭 상한 + 테두리 */
+table {
+  width: 100%;
+  max-width: 640px;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 9.5pt;
+}
+th, td {
+  border: 1px solid #bbb;
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+th { background: #f2f2f2; }
+
+/* 제목 */
+h1 { font-size: 18pt; border-bottom: 2px solid #333; padding-bottom: 6px; }
+h2 { font-size: 14pt; border-bottom: 1px solid #999; padding-bottom: 3px; margin-top: 18px; }
+h3 { font-size: 12pt; }
+h4 { font-size: 11pt; }
+
+/* 코드/인라인 코드: 줄바꿈 유도 */
+code {
+  background: #f4f4f4;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 9pt;
+  overflow-wrap: break-word;
+}
+pre {
+  background: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  max-width: 640px;
+}
+pre code { background: none; padding: 0; }
+
+/* 인용/강조 */
+blockquote {
+  border-left: 4px solid #4a90d9;
+  margin: 10px 0;
+  padding: 4px 12px;
+  background: #f7fbff;
+  color: #333;
+}
+
+/* 탐색 링크 영역 */
+.nav-links {
+  margin: 14px 0;
+  padding: 8px 12px;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+.nav-links a { text-decoration: none; color: #1a56b0; }
+.nav-links a:hover { text-decoration: underline; }
+
+hr { border: none; border-top: 1px solid #ccc; margin: 16px 0; }
+
+/* 글머리표: 중첩 깊이별 □/○/- (00-a4-authoring-guide §3-5와 동일 마커 체계) */
+ul { margin: 6px 0; padding-left: 0; }
+ul > li {
+  list-style: none;
+  position: relative;
+  padding-left: 22px;
+  margin: 3px 0;
+}
+ul > li::before { content: '□'; position: absolute; left: 2px; color: #1B1760; font-size: 0.9em; }
+ul ul > li::before { content: '○'; }
+ul ul ul > li::before { content: '-'; }
+
+/* 문단번호: 순서 있는 목록은 중첩 깊이만큼 이어지는 계층 번호(1. / 1.1. / 1.1.1.) */
+ol { margin: 6px 0; padding-left: 0; counter-reset: item; list-style: none; }
+ol > li {
+  counter-increment: item;
+  position: relative;
+  padding-left: 30px;
+  margin: 3px 0;
+}
+ol > li::before {
+  content: counters(item, '.') '.';
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  color: #1B1760;
+}
+
+/* 인쇄 시 불필요한 배경 최소화 */
+@media print {
+  body { background: #fff; }
+  .container { max-width: none; }
+  a { color: #000; text-decoration: none; }
+}
+
+/* 화면 미리보기 */
+@media screen {
+  body { background: #eee; padding: 20px 0; }
+  .container { background: #fff; padding: 16mm; box-shadow: 0 0 8px rgba(0,0,0,0.15); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>유지보수 개발자용 개발 메뉴얼 (v1.1.0)</h1>
+<blockquote><strong>대상 독자</strong>: 이 시스템을 넘겨받아 유지보수·기능개선하는 개발자. <strong>합격 기준</strong>: 코드를 처음 보는 개발자가 이 문서로 아키텍처를 이해하고 안전하게 수정·빌드·배포할 수 있어야 한다. <strong>기준 버전 / 최종 확인일</strong>: system v1.1.0 · model <code>hr-sentiment-v1.0</code> · source_commit <code>7b106b5</code> · build 2026-07-16 · 문서 확인일 2026-07-22</blockquote>
+<hr>
+<h2>이 문서는 무엇인가</h2>
+<p>한국어 인사평가 문서를 분석하여 <strong>감정(긍정/부정/중립)·단어 빈도·워드클라우드</strong>를 생성하고, 대량 배치·수집 대시보드를 제공하는 내부망 데스크톱 시스템의 <strong>개발자 관점 설명서</strong>다. 운영자용 사용법이 아니라, <strong>소스 구조·엔진 동작·데이터 계층·빌드/배포·확장 시 주의점</strong>을 코드 실증으로 다룬다.</p>
+<ul><li>앱 소스 루트: <code>wordcloud_project/</code></li><li>백엔드: Python 3.10 + Flask (블루프린트 12개)</li><li>핵심 모델: 베이스 KoTE(44감정) + HR 도메인 파인튜닝 3분류 극성 모델</li><li>기준 버전 근거: <code>wordcloud_project/VERSION.json</code></li></ul>
+<blockquote>⚠️ 이 문서의 모든 경로·라인 번호는 확인일(2026-07-22, commit <code>7b106b5</code>) 기준 실측이다. 코드가 바뀌면 라인 번호는 어긋날 수 있으니 함수명·상징 이름으로 재탐색하라.</blockquote>
+<hr>
+<h2>문서 구성 (읽는 순서)</h2>
+<table><thead><tr><th>#</th><th>문서</th><th>다루는 내용</th></tr></thead><tbody><tr><td>01</td><td><a href="01-architecture.md">아키텍처 개요</a></td><td>실행 진입점 · Flask 앱 구성 · 요청 흐름 · 디렉터리 지도</td></tr><tr><td>02</td><td><a href="02-module-map.md">모듈 지도</a></td><td>주요 패키지/서비스의 책임과 상호관계</td></tr><tr><td>03</td><td><a href="03-emotion-engine.md">감정분석 엔진</a></td><td>KoTE 로딩/추론 · 3-class 매핑 · 규칙 계층 · 절 단위 판정 · corrections 키잉</td></tr><tr><td>04</td><td><a href="04-data-layer.md">데이터 계층</a></td><td><code>.sessions</code> DB · <code>src/configs</code> 매핑 · 스키마 · evaluation_id 함정</td></tr><tr><td>05</td><td><a href="05-build-deploy.md">빌드·배포</a></td><td><code>build_deploy.ps1</code> · VERSION.json 재생성 · 배포 제외 폴더</td></tr><tr><td>06</td><td><a href="06-batch.md">배치 처리</a></td><td>대규모(약 1.9만명) 배치 · 추적 복잡도 · 작업서(Work Order)</td></tr><tr><td>07</td><td><a href="07-finetune-pipeline.md">파인튜닝 데이터 파이프라인</a></td><td><code>hr-kote-finetune</code> 데이터셋 · RUNBOOK · gold 승격 · 재학습 경로</td></tr><tr><td>08</td><td><a href="08-dev-setup-troubleshooting.md">개발 환경·테스트·트러블슈팅</a></td><td>로컬 세팅 · 실행 안내 · 자주 겪는 함정</td></tr><tr><td>09</td><td><a href="09-extension-points.md">확장 포인트/주의</a></td><td>공통 모듈 보호 · 시간처리·필드네이밍 표준</td></tr></tbody></table>
+<hr>
+<h2>상위 참조 지침 (정본)</h2>
+<ul><li>프로젝트 나침반: <code>wordcloud_project/CLAUDE.md</code>, <a href="../../../../core/00-core.md"><code>.clinerules/core/00-core.md</code></a></li><li>감정 규칙 상세(모듈 개요): <a href="../../../project_wordcloud/modules/emotion-analysis.md"><code>project_wordcloud/modules/emotion-analysis.md</code></a></li><li>배포 절차: <a href="../../../project_wordcloud/deployment.md"><code>project_wordcloud/deployment.md</code></a></li><li>시간 처리: <a href="../../../development/time-handling-rules.md"><code>development/time-handling-rules.md</code></a> · 필드 네이밍: <a href="../../../development/field-naming-convention.md"><code>development/field-naming-convention.md</code></a></li><li>데이터셋 상시 절차: <code>wordcloud_project/plans/_datasets/kote_finetune/RUNBOOK.md</code></li></ul>
+<blockquote><strong>정직 고지</strong>: 본 문서는 코드 정적 조사(Read/Grep) 기반이다. 저자는 서버를 기동하거나 배치를 실행하지 않았다(무단 실행 금지 원칙). "동작한다"는 서술은 코드 경로 확인 수준이며, 런타임 검증이 필요한 항목은 각 문서에서 "확인 필요"로 명시했다.</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h1>1 아키텍처 개요</h1>
+<blockquote><strong>핵심</strong>: Flask 팩토리(<code>web/app.py</code>) → 12개 블루프린트 → 서비스 계층 → SQLite(<code>.sessions</code>) + 파일 산출물. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>)</blockquote>
+<hr>
+<h2>1.1 실행 진입점</h2>
+<table><thead><tr><th>항목</th><th>값</th><th>근거</th></tr></thead><tbody><tr><td>앱 팩토리</td><td><code>create_app()</code></td><td><code>web/app.py:53</code></td></tr><tr><td>실행 함수</td><td><code>main()</code> → <code>app.run(...)</code></td><td><code>web/app.py:121-141</code></td></tr><tr><td>모듈 실행</td><td><code>python -m web.app</code></td><td><code>web/app.py:144-145</code> (<code>if <strong>name</strong> == '<strong>main</strong>': main()</code>)</td></tr><tr><td>기본 포트/호스트</td><td><code>127.0.0.1:5001</code></td><td><code>src/config/settings.py:48-49</code>, <code>.env</code></td></tr><tr><td>Debug 플래그</td><td><code>FLASK_DEBUG</code>(기본 True)</td><td><code>src/config/settings.py:47</code></td></tr><tr><td>리로더</td><td><code>use_reloader=False</code>, <code>threaded=True</code></td><td><code>web/app.py:139-140</code></td></tr></tbody></table>
+<ul><li>Windows 인코딩 강제: <code>web/app.py:9-15</code>에서 <code>stdout/stderr</code>를 UTF-8로 재구성하고 로케일을 <code>ko_KR</code>로 고정한다.</li><li>프로젝트 루트를 <code>sys.path</code>에 추가: <code>web/app.py:18</code>.</li><li>배포 패키지의 <code>start.bat</code>도 동일하게 <code>python -m web.app</code>을 호출한다(<code>deploy/build_deploy.ps1:195-211</code>).</li></ul>
+<blockquote>⚠️ <strong>서버 실행은 안내만</strong>: 이 문서는 기동 방법을 설명할 뿐, 저자는 서버를 직접 띄우지 않는다. 로컬 구동은 <a href="08-dev-setup-troubleshooting.md">08 문서</a> 참조.</blockquote>
+<hr>
+<h2>1.2 앱 부팅 시퀀스</h2>
+<p><code>main()</code>(<code>web/app.py:121</code>) 실행 순서:</p>
+<ol><li><code>create_app()</code> — Flask 인스턴스 생성, <code>template_folder</code>/<code>static_folder</code>를 절대경로로 지정(<code>web/app.py:55-57</code>).</li><li>앱 설정: <code>SECRET_KEY</code>, <code>JSON_AS_ASCII=False</code>(한글 JSON 유지), 업로드 한도 <code>MAX_CONTENT_LENGTH=100MB</code>(<code>web/app.py:60-63</code>).</li><li>블루프린트 12개 등록(<code>web/app.py:66-77</code>).</li><li>컨텍스트 프로세서 2개 주입: 관리자 세션 상태(<code>inject_auth_state</code>)·버전 정보(<code>inject_version_info</code> → <code>version_service.get_version_info()</code>)(<code>web/app.py:79-86</code>).</li><li>404/500 에러 핸들러 등록(<code>web/app.py:89-100</code>).</li><li><code>/outputs/...</code> 정적 산출물 서빙 라우트 3종(<code>web/app.py:103-116</code>).</li><li><strong>부팅 마이그레이션</strong>: <code>main()</code>이 <code>deploy_session_service._auto_migrate_evaluations()</code>를 호출(<code>web/app.py:125-126</code>) — DB가 비어 있으면 <code>users/*.json</code>을 <code>evaluations</code> 테이블로 1회 이전.</li></ol>
+<hr>
+<h2>1.3 블루프린트(라우트) 지도</h2>
+<p><code>web/app.py:40-51</code>에서 임포트하여 <code>web/app.py:66-77</code>에서 등록한다.</p>
+<table><thead><tr><th>블루프린트</th><th>URL prefix</th><th>파일</th><th>책임</th></tr></thead><tbody><tr><td><code>ui_bp</code></td><td>(없음)</td><td><code>src/routes/ui_routes.py</code></td><td>HTML 페이지 렌더(대시보드·워드클라우드·설정 등)</td></tr><tr><td><code>integrated_bp</code> (<code>metadata</code>)</td><td><code>/api/integrated</code></td><td><code>src/routes/integrated_data_routes.py</code></td><td>통합 수집 데이터 API</td></tr><tr><td><code>batch_bp</code></td><td><code>/api/batch</code></td><td><code>src/routes/batch_routes.py</code></td><td>배치 실행·진행·Resume API</td></tr><tr><td><code>wordcloud_bp</code></td><td><code>/api/wordcloud</code></td><td><code>src/routes/wordcloud_routes.py</code></td><td>워드클라우드 생성 API</td></tr><tr><td><code>api_bp</code></td><td><code>/api</code></td><td><code>src/routes/api_routes.py</code></td><td>공통/기타 API</td></tr><tr><td><code>perspective_bp</code></td><td><code>/api/perspective</code></td><td><code>src/routes/perspective_routes.py</code></td><td>감정·관점(그룹) 분석 API</td></tr><tr><td><code>test_bp</code></td><td>(없음)</td><td><code>src/routes/test_routes.py</code></td><td>감정/욕설/비꼬임 테스트 UI·API</td></tr><tr><td><code>admin_bp</code></td><td><code>/admin</code></td><td><code>src/routes/admin_routes.py</code></td><td>관리자 로그인·설정</td></tr><tr><td><code>wordcloud_data_bp</code></td><td><code>/api/wordcloud</code></td><td><code>src/routes/wordcloud_data_routes.py</code></td><td>워드클라우드용 데이터 조회</td></tr><tr><td><code>wordcloud_preview_bp</code></td><td>(없음)</td><td><code>src/routes/wordcloud_preview_routes.py</code></td><td>미리보기</td></tr><tr><td><code>plans_bp</code></td><td><code>/admin</code></td><td><code>src/routes/plans_routes.py</code></td><td>Plans 칸반보드·CR</td></tr><tr><td><code>version_bp</code></td><td><code>/api/version</code></td><td><code>src/routes/version_routes.py</code></td><td>버전·무결성 정보</td></tr></tbody></table>
+<blockquote>확인 필요: <code>wordcloud_bp</code>와 <code>wordcloud_data_bp</code>가 동일 prefix <code>/api/wordcloud</code>를 공유한다(<code>src/routes/wordcloud_routes.py:11</code>, <code>wordcloud_data_routes.py:10</code>). 엔드포인트 경로가 겹치지 않는지는 라우트 추가 시 반드시 확인하라.</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h2>1.4 요청 흐름 (라우트 → 서비스 → DAO → DB)</h2>
+<p>계층 경계가 명확하다. 대표 예로 감정/단어 집계 흐름:</p>
+<pre><code>[HTTP 요청]
+   ↓  src/routes/perspective_routes.py (Blueprint 핸들러: 파라미터 파싱·검증)
+   ↓  src/services/perspective_service.py (도메인 로직: 문장→감정 override, 단어 점수 집계)
+   ↓  src/modules/*.py (엔진: KoTE 추론·HR 감정모델·전처리·워드클라우드 렌더)
+   ↓  src/services/deploy_session_service._get_conn() (DAO: SQLite 연결 헬퍼)
+   ↓  .sessions/deploy_sessions.db (SQLite, WAL)
+   ↑  응답(JSON) 또는 산출 이미지(/outputs/... 서빙)</code></pre>
+<ul><li><strong>DAO 계층</strong>은 별도 ORM 없이 <code>deploy_session_service._get_conn()</code>(<code>src/services/deploy_session_service.py:12-17</code>)을 공유하는 얇은 SQLite 접근이다. <code>batch_work_order_service</code>도 이 헬퍼를 재사용해 순환 임포트·중복 초기화를 피한다(<code>src/services/batch_work_order_service.py:12</code>).</li><li><strong>모듈(엔진)</strong>은 상태를 갖는 싱글톤(KoTE·HR 감정모델)이라 프로세스 1회 로드 후 재사용된다(<a href="03-emotion-engine.md">03 문서</a>).</li><li><strong>산출물</strong>(워드클라우드 PNG 등)은 DB가 아니라 <code>outputs/</code> 하위에 저장되고 <code>/outputs/<path></code> 라우트로 서빙된다(<code>web/app.py:103-116</code>).</li></ul>
+<hr>
+<h2>1.5 디렉터리 지도 (<code>wordcloud_project/</code>)</h2>
+<table><thead><tr><th>폴더</th><th>역할</th></tr></thead><tbody><tr><td><code>web/</code></td><td>Flask 진입점(<code>app.py</code>)·<code>templates/</code>(Jinja HTML)·<code>static/</code>·<code>configs/</code></td></tr><tr><td><code>src/routes/</code></td><td>블루프린트(HTTP 계층)</td></tr><tr><td><code>src/services/</code></td><td>도메인 서비스·DAO(감정 집계·배치·수집·판정패킷·갤러리 등)</td></tr><tr><td><code>src/modules/</code></td><td>분석 엔진(KoTE·HR 감정·전처리·워드클라우드·욕설·리더십·비꼬임)</td></tr><tr><td><code>src/models/</code></td><td>통합 데이터 매니저(<code>integrated_data_manager.py</code>)</td></tr><tr><td><code>src/config/</code></td><td><code>settings.py</code>(경로·플래그 정본)</td></tr><tr><td><code>src/configs/</code></td><td>런타임 설정 JSON·매핑(<code>mappings/</code>)·가명 매핑(<code>pseudonym_mappings.enc</code>)·불용어 등</td></tr><tr><td><code>scripts/</code></td><td>유지보수 스크립트(<code>gen_version.py</code>·<code>migrate_evaluations.py</code>·벤치)</td></tr><tr><td><code>utils/</code></td><td>로거·날짜 정규화 공용 유틸</td></tr><tr><td><code>deploy/</code></td><td><code>build_deploy.ps1</code>(배포 빌더)</td></tr><tr><td><code>.sessions/</code></td><td>SQLite DB(<code>deploy_sessions.db</code>) — 배포 제외</td></tr><tr><td><code>outputs/</code> · <code>processed_data/</code> · <code>inputs/</code></td><td>산출·중간·입력 데이터 — 배포 제외</td></tr><tr><td><code>plans/</code></td><td>계획·데이터셋(<code>_datasets/kote_finetune/</code>) — 배포 제외</td></tr><tr><td><code>venv/</code> · <code>vendor_python_pkgs/</code></td><td>로컬 런타임 — 배포 제외</td></tr></tbody></table>
+<blockquote>배포 제외 목록의 정확한 근거는 <a href="05-build-deploy.md">05 빌드·배포</a> <code>$ExcludeDirs</code>/<code>$ExcludeFiles</code> 절 참조.</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h1>2 모듈 지도</h1>
+<blockquote><strong>핵심</strong>: 엔진(<code>src/modules</code>)은 상태를 가진 싱글톤, 서비스(<code>src/services</code>)는 도메인 로직·DAO. 감정 판정은 여러 파일에 걸쳐 계층화되어 있다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22</blockquote>
+<hr>
+<h2>2.1 엔진 계층 (<code>src/modules/</code>)</h2>
+<table><thead><tr><th>파일</th><th>책임</th><th>주요 심볼</th></tr></thead><tbody><tr><td><code>kote_shared.py</code></td><td>베이스 KoTE(44감정) 모델 싱글톤(스레드 안전). emotion·leadership이 GPU 인스턴스 공유(VRAM 중복로드 방지)</td><td><code>KoTEModel</code>(<code>kote_shared.py:10</code>)</td></tr><tr><td><code>emotion_analysis.py</code></td><td>KoTE 추론 래퍼·44감정→3극성 후처리·top3</td><td><code>EmotionAnalysis</code>, <code>analyze_emotion</code>(<code>:297</code>), <code>analyze_emotion_batch</code>(<code>:323</code>)</td></tr><tr><td><code>hr_sentiment.py</code></td><td>HR 도메인 파인튜닝 3분류 극성 모델(별도 싱글톤·안전 폴백)</td><td><code>predict_sentiments</code>(<code>:155</code>), <code>predict_proba</code>(<code>:173</code>), <code>model_status</code>(<code>:136</code>)</td></tr><tr><td><code>sentence_emotion.py</code></td><td>문서→문장 분할 후 문장별 KoTE 원시 점수(배치 캐시·그룹 fallback 공유)</td><td><code>compute_sentence_raw_scores</code>(<code>:13</code>)</td></tr><tr><td><code>text_preprocessing.py</code></td><td>문장 분리·<strong>절 분리</strong>(혼합극성 분해)</td><td><code>split_sentences</code>(<code>:27</code>), <code>split_clauses</code>(<code>:75</code>)</td></tr><tr><td><code>wordcloud_generator.py</code></td><td>워드클라우드 이미지 렌더</td><td>—</td></tr><tr><td><code>nlp_analysis.py</code></td><td>형태소·명사 추출(빈도)</td><td><code>NLPAnalysis</code></td></tr><tr><td><code>profanity_filter.py</code></td><td>욕설 탐지/필터(한/영)</td><td><code>advanced_filter_profanity</code></td></tr><tr><td><code>leadership_analysis.py</code></td><td>리더십 특질 분석(KoTE 공유)</td><td>—</td></tr><tr><td><code>sarcasm_analysis.py</code></td><td>비꼬임 분석</td><td>—</td></tr><tr><td><code>pseudonym_manager.py</code></td><td>가명화/역가명(암호화 매핑)</td><td>—</td></tr><tr><td><code>stopword_manager.py</code> · <code>word_boost_manager.py</code> · <code>hr_context_lexicon.py</code></td><td>불용어·가중·도메인 렉시콘</td><td>—</td></tr><tr><td><code>integrated_analysis.py</code></td><td>통합(문장 override 질량 기반) 감정·단어 버킷 집계</td><td>—</td></tr></tbody></table>
+<blockquote>⚠️ <code>.bak</code>/<code>.py.bak</code> 파일(<code>batch_manager.py.bak</code>, <code>wordcloud_data_service.py.bak</code> 등)은 <strong>런타임에 로드되지 않는 잔재</strong>다. 수정 대상으로 착각하지 말 것 — 임포트 경로에 없는 사본이다.</blockquote>
+<hr>
+<h2>2.2 서비스 계층 (<code>src/services/</code>)</h2>
+<table><thead><tr><th>파일</th><th>책임</th></tr></thead><tbody><tr><td><code>perspective_service.py</code></td><td><strong>감정 판정 규칙 계층의 핵심</strong>(문장/절 override·긍정구제·개선요청 부정화·모델 라벨 override)·단어 점수·감정 집계·corrections 로드(<a href="03-emotion-engine.md">03 문서</a>)</td></tr><tr><td><code>batch_processor.py</code></td><td>대규모 배치 실행(청크 수집→병렬 직원 처리→요약)·체크포인트</td></tr><tr><td><code>batch_service.py</code> · <code>batch_manager.py</code> · <code>batch_events.py</code> · <code>batch_staging.py</code></td><td>배치 오케스트레이션·진행 이벤트·staging DB</td></tr><tr><td><code>batch_work_order_service.py</code></td><td>배치 <strong>작업서</strong>(설정 스냅샷+진행) 영구화·Resume 지원</td></tr><tr><td><code>deploy_session_service.py</code></td><td>SQLite 스키마 정의·마이그레이션·연결 헬퍼(<strong>DAO 허브</strong>)·부팅 마이그레이션</td></tr><tr><td><code>judgment_packet_service.py</code></td><td>감정 판정 작업 패킷(추출→AI판정→삽입, 가명 in-place)</td></tr><tr><td><code>gallery_db_service.py</code></td><td>배포 갤러리(<code>gallery_entries</code>)</td></tr><tr><td><code>wordcloud_data_service.py</code> · <code>wordcloud_service.py</code></td><td>워드클라우드용 데이터 조회·생성</td></tr><tr><td><code>integrated_data_service.py</code></td><td>수집 대시보드 데이터</td></tr><tr><td><code>profanity_db_service.py</code></td><td>욕설 집계 저장/조회</td></tr><tr><td><code>acquired_handoff.py</code></td><td>취득 문장(<code>acquired_sentences</code>) 핸드오프(데이터셋 연결)</td></tr><tr><td><code>version_service.py</code></td><td><code>VERSION.json</code> 읽기·무결성 대조</td></tr><tr><td><code>perspective_service.py</code>(재게시) · <code>user_data_manager.py</code></td><td>직원/평가 데이터 접근</td></tr><tr><td><code>progress_time.py</code></td><td>진행률·경과시간 표시</td></tr></tbody></table>
+<hr>
+<div class="pagebreak"></div>
+<h2>2.3 상호관계 (호출 그래프 요약)</h2>
+<pre><code>routes/perspective_routes.py
+   └─> services/perspective_service.py
+          ├─> modules/sentence_emotion.compute_sentence_raw_scores
+          │        └─> modules/emotion_analysis.analyze_emotion_batch
+          │                 └─> modules/kote_shared.KoTEModel (싱글톤)
+          ├─> modules/hr_sentiment.predict_sentiments (플래그 on 시)
+          ├─> modules/text_preprocessing.split_sentences / split_clauses
+          └─> services/deploy_session_service._get_conn  (corrections 로드)
+
+routes/batch_routes.py
+   └─> services/batch_processor.process_batch
+          ├─> services/batch_staging (원문 적재 staging.db)
+          ├─> services/batch_work_order_service (작업서·완료직원 items)
+          ├─> models/integrated_data_manager
+          └─> modules/nlp_analysis, profanity_filter, wordcloud_generator
+
+web/app.py (부팅)
+   └─> services/deploy_session_service._auto_migrate_evaluations</code></pre>
+<ul><li><strong>KoTE 단일 로드 원칙</strong>: <code>emotion_analysis</code>와 <code>leadership_analysis</code>는 <code>KoTEModel</code> 싱글톤을 공유한다(<code>emotion_analysis.py:53-59</code>, <code>kote_shared.py:10-28</code>). 새 분석 모듈을 추가할 때 KoTE를 재로드하면 VRAM 한도를 초과할 수 있으니 반드시 이 싱글톤을 재사용하라.</li><li><strong>HR 감정모델은 별도 싱글톤</strong>(<code>hr_sentiment.py:36-37, 117-133</code>)이며 KoTE와 독립이다. 로드/추론 실패 시 <code>None</code>을 반환해 호출부가 규칙으로 폴백한다(무중단 설계).</li><li><strong>DAO 단일 진입</strong>: 모든 SQLite 접근은 <code>deploy_session_service._get_conn()</code>을 거친다. 새 테이블은 <code>_init_db()</code>의 DDL과 <code>_apply_schema_migrations()</code>의 버전 분기에 추가한다(<a href="04-data-layer.md">04 문서</a>).</li></ul>
+<hr>
+<h2>2.4 서비스 vs 엔진 구분 원칙 (수정 시 판단 기준)</h2>
+<ul><li><strong>엔진(<code>src/modules</code>)에 두는 것</strong>: 모델 추론, 형태소/문장/절 분리, 이미지 렌더 등 <strong>도메인 무관 재사용 연산</strong>.</li><li><strong>서비스(<code>src/services</code>)에 두는 것</strong>: "인사평가 감정은 이렇게 판정한다" 같은 <strong>도메인 규칙</strong>, DB 접근, 배치 오케스트레이션.</li><li>감정 <strong>규칙</strong>(긍정구제·개선요청 부정화 등)이 <code>perspective_service.py</code>에 있는 이유가 이것이다 — 모델 자체가 아니라 그 위에 얹는 도메인 판정이기 때문. 규칙 변경은 <a href="03-emotion-engine.md">03 문서</a>의 안전 원칙을 반드시 따를 것.</li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h1>3 감정분석 엔진</h1>
+<blockquote><strong>핵심</strong>: 문장/절 단위 KoTE 원시점수 → HR 파인튜닝 모델(선택) → <strong>도메인 규칙 계층 override</strong> → 사람 보정(corrections)의 4단 파이프라인. 규칙은 모두 <code>perspective_service.py</code>에 있고, 최우선 불변식은 <strong>긍↔부 오분류 0</strong>이다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>) <strong>규칙 상세 정본</strong>: <a href="../../../project_wordcloud/modules/emotion-analysis.md"><code>project_wordcloud/modules/emotion-analysis.md</code></a></blockquote>
+<hr>
+<h2>3.1 두 개의 모델 (역할 분리)</h2>
+<table><thead><tr><th>모델</th><th>파일</th><th>역할</th><th>로드/폴백</th></tr></thead><tbody><tr><td>베이스 KoTE(44감정)</td><td><code>src/modules/kote_shared.py:10</code> <code>KoTEModel</code></td><td>문장별 44감정 확률 → 긍/부/중 원시 점수</td><td>스레드 안전 싱글톤. emotion·leadership이 <strong>동일 GPU 인스턴스 공유</strong>(VRAM 중복로드 방지)</td></tr><tr><td>HR 도메인 3분류 극성</td><td><code>src/modules/hr_sentiment.py:49</code> <code>_HRSentimentModel</code></td><td>positive/negative/neutral <strong>극성만</strong> 결정(인사평가 파인튜닝)</td><td>별도 지연로드 싱글톤. 디렉터리 부재·로드/추론 실패 시 <strong><code>None</code> 반환 → 규칙 폴백</strong>(무중단)</td></tr></tbody></table>
+<ul><li>HR 모델 라벨 순서: <code>0=positive, 1=negative, 2=neutral</code>(<code>hr_sentiment.py:19</code> <code>_ID2LABEL</code>).</li><li><strong>필드 프리픽스 규약</strong>(train/serve 정합): 장점/단점 필드가 있으면 입력을 <code>f'{field} 평가: {text}'</code>로 변환해 추론한다(<code>hr_sentiment.py:68-76</code> <code>_prefixed</code>). 재추론 대조 시 이 프리픽스를 빠뜨리면 오진한다.</li><li>캘리브레이션: 모델 디렉터리의 <code>calibration.json</code> temperature로 확률 눈금만 보정(<code>hr_sentiment.py:22-34</code>). <strong>argmax 라벨은 T와 무관</strong> — <code>predict_proba</code>의 confidence는 escalation 라우팅에만 쓴다.</li><li>on/off 스위치: <code>USE_HR_SENTIMENT_MODEL</code>(기본 on, <code>src/config/settings.py:27</code>). 모델 실측 지문(sha256·loaded_at)은 <code>model_status()</code>(<code>hr_sentiment.py:136</code>)로 조회한다.</li></ul>
+<blockquote><strong>모델 파일 위치</strong>: <code>settings.py:20,26</code> 기준 <code>D:\dev\wordcloud\model\</code>(= <code>wordcloud_project</code>의 형제 폴더). 배포 시 <code>-Package</code> 모드가 이 <code>model/</code>을 동봉한다(<a href="05-build-deploy.md">05 문서</a>).</blockquote>
+<hr>
+<h2>3.2 문장·절 분리 (전처리)</h2>
+<p><code>src/modules/text_preprocessing.py</code> — 무거운 의존이 없는 경량 모듈.</p>
+<ul><li><code>split_sentences(text)</code>(<code>:27</code>): <code>.!?\n</code>로 분할 + 인사말·5자 미만·깨진 HTML 엔티티(<code>&#NNNN;</code>)·자모 난타 노이즈 제외. <strong>production 집계·갤러리가 쓰는 정본</strong>.</li><li><code>split_clauses(sentence)</code>(<code>:75</code>): 역접·양보 연결어미(<code>으나/지만/는데/…</code>)·대조 접속부사(<code>그러나/반면/…</code>) 경계에서 절 분리. <strong>혼합극성 문장</strong>("좋으나 낮음")을 단일극성 절로 쪼갠다.<ul><li>⚠️ <strong>데이터셋 빌드 전용</strong>이다(주석 <code>:55-58</code>). production <code>split_sentences</code>는 건드리지 않는다(집계 영향 격리).</li><li>부정 범위 보존: 연결어미는 완결 용언 뒤에 오므로 <code>않/없/안</code>을 절 중간에서 끊지 않는다("강압적이지 않으나"는 한 절 유지).</li><li>표지 없으면 <code>[sentence]</code> 그대로 반환(안전한 기본값), 과분할은 4자 미만 조각 흡수(<code>_CLAUSE_MIN_LEN</code>).</li></ul></li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h2>3.3 규칙 계층 (<code>perspective_service.py</code> — 엔진 위에 얹는 도메인 판정)</h2>
+<p>문장 override의 <strong>단일 정의</strong>는 <code>_sentence_sentiment_override_explain(pos, neg, sentence, …)</code>(<code>:1221</code>)이며, <code>sentence_sentiment_override</code>(<code>:1408</code>)는 이를 호출해 점수만 반환한다. <strong>분기 조건·반환 점수는 두 함수가 완전히 동일해야 한다</strong>(동작 보존 계약, <code>:1226</code>).</p>
+<p>분기 <strong>순서</strong>가 곧 우선순위다(0702_03 reorder 반영). 대표 분기:</p>
+<table><thead><tr><th>순서</th><th>분기(rule_id)</th><th>방향</th><th>핵심 검출기</th></tr></thead><tbody><tr><td>1</td><td>개인안녕/건강 조언 → 중립</td><td>→중립</td><td><code>is_personal_wellbeing_neutral</code>(<code>:984</code>), <code>is_health_advice</code>(<code>:943</code>)</td></tr><tr><td>2</td><td>광의 혼합 긍부 → 중립</td><td>→중립</td><td><code>is_mixed_pos_neg</code>(<code>:1030</code>) (0715 사용자 카테고리3)</td></tr><tr><td>3</td><td>무결점/무응답/약점-못찾음 선언 → 중립</td><td>→중립</td><td><code>is_no_weakness_declaration</code>(<code>:857</code>), <code>is_no_response</code>(<code>:432</code>)</td></tr><tr><td>4</td><td>긍정 구제(positive_rescue)</td><td>→긍정</td><td><code>has_positive_implying_phrase</code>(<code>:451</code>) + <code>has_improvement_request</code>(<code>:721</code>) 등 게이트</td></tr><tr><td>5</td><td>개선요청/결핍 프레이밍 → 부정</td><td>→부정</td><td><code>_has_improvement_request_core</code>(<code>:667</code>), <code>has_constructive_need</code>(<code>:607</code>), <code>_is_speculative_need</code>(<code>:1071</code>), <code>_has_request_marker</code>(<code>:1129</code>)</td></tr></tbody></table>
+<ul><li><strong>개선요청 화행 = 부정</strong>(사용자 재정, [[feedback_improvement_request_is_negative_gold]]): "~할 필요/키워야"는 중립이 아니라 부정으로 확정. 단 명확한 긍정 절이 선행하는 혼합("뛰어나나 개선 필요")은 →중립(<code>improvement_request_neutral</code>, <code>:1362</code>).</li><li><strong>긍↔부 안전 방향</strong>: 규칙이 바꾸는 방향은 항상 →중립 또는 한 방향뿐이며, 긍정↔부정을 직접 뒤집는 분기는 두지 않는다. 다의·조사 트랩(<code>이나</code> 나열=or vs 양보) 때문에 대조어 게이트가 세분돼 있다(<code>_has_improve_blocking_contrast</code>, <code>:165</code>).</li></ul>
+<h3>3.3.1 모델 라벨 override (파인튜닝 켜졌을 때)</h3>
+<p><code>apply_model_label_override(model_label, sentence, field=None)</code>(<code>:1436</code>, 13_03 Track2)는 모델 출력 위에 얹는 <strong>좁은 고정밀</strong> 교정이다.</p>
+<ul><li>허용: 모델이 명백 긍정을 부정으로 본 것 등을 <strong>부→긍은 하지 않는다</strong> — 그건 override로 안전 교정 불가라 <strong>재학습(Track1) 몫</strong>(<code>:1452</code>).</li><li>필드신호 override(무서술어 단편→필드극성)는 <strong>폐기</strong>됨: 모델이 필드 프리픽스로 이미 내장(<code>:1448</code>). [[project_override_bypass_is_correct]] 참조.</li></ul>
+<blockquote>⚠️ <strong>규칙 수정 절대 원칙</strong>: 어떤 분기를 추가·변경하든 <strong>장점/단점 코퍼스 양쪽 적대셋</strong>으로 긍↔부 0을 검증하고(한쪽만 보면 거짓 자신감), 그룹 단위 일치율로 감사한다. 문장 두더지잡기 금지.</blockquote>
+<hr>
+<h2>3.4 사람 보정 (corrections) — 최종 권위</h2>
+<ul><li>저장 위치: <code>evaluations.sentiment_corrections</code> 컬럼(TEXT JSON, 스키마 v4에서 추가 — <a href="04-data-layer.md">04 문서</a>).</li><li>로드: <code>load_...corrections</code>가 <code>SELECT id, sentiment_corrections FROM evaluations WHERE employee_id=?</code>로 읽는다(<code>:2165-2172</code>).</li><li><strong>키잉 = <code>_db_id</code></strong>: <code>evaluation_id</code>는 <strong>중복될 수 있으므로</strong> 보정값 키로 쓰지 않는다. 고유한 DB row <code>id</code>를 <code>ev_obj['_db_id']</code>에 실어(<code>:1766, 1879, 1947</code>) <code>corrections_map.get(ev.get('_db_id'))</code>로 조회한다(<code>:2293, 2471</code>). [[project_eval_id_not_unique]]</li><li>우선순위: corrections가 있으면 규칙·모델 출력을 덮어쓴다(사람 라벨이 정본).</li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h1>4 데이터 계층</h1>
+<blockquote><strong>핵심</strong>: 단일 SQLite(<code>.sessions/deploy_sessions.db</code>, WAL)에 모든 상태를 두고, 접근은 <code>deploy_session_service._get_conn()</code> 하나로 통일한다. 스키마는 <code>schema_version</code> 테이블로 버전 관리하며 부팅 시 자동 마이그레이션한다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>)</blockquote>
+<hr>
+<h2>4.1 저장소 구성</h2>
+<table><thead><tr><th>저장소</th><th>위치</th><th>내용</th><th>배포</th></tr></thead><tbody><tr><td>운영 DB</td><td><code>.sessions/deploy_sessions.db</code> (SQLite, WAL)</td><td>세션·평가·배치·갤러리·욕설·취득문장</td><td><strong>제외</strong>(런타임 생성)</td></tr><tr><td>런타임 설정·매핑</td><td><code>src/configs/</code></td><td>매핑(<code>mappings/</code>)·가명 매핑(<code>pseudonym_mappings.enc</code>)·불용어·가중치</td><td>포함</td></tr><tr><td>산출물</td><td><code>outputs/</code>, <code>processed_data/</code></td><td>워드클라우드 PNG·배치 중간물</td><td><strong>제외</strong></td></tr></tbody></table>
+<ul><li>연결 헬퍼: <code>_get_conn()</code>(<code>deploy_session_service.py:12</code>) — <code>PRAGMA journal_mode=WAL</code> + <code>row_factory=sqlite3.Row</code>.</li><li><strong>DAO 단일 진입</strong>: <code>batch_work_order_service</code> 등 다른 서비스도 이 헬퍼(<code>_get_conn</code>/<code>_init_db</code>)를 재사용해 순환 임포트·중복 초기화를 피한다(<code>batch_work_order_service.py:12</code>).</li></ul>
+<blockquote>⚠️ <strong>앱 설정과 DB는 한 쌍</strong>: 앱은 <code>.sessions</code> DB와 <code>src/configs</code> 매핑을 함께 읽는다. 둘을 교체할 땐 <strong>한 쌍으로 함께 교체 + 서버 재시작</strong>한다. [[project_db_mapping_pair_swap]]</blockquote>
+<hr>
+<h2>4.2 주요 테이블 (<code>_init_db()</code> DDL, <code>deploy_session_service.py:20-131</code>)</h2>
+<table><thead><tr><th>테이블</th><th>키/제약</th><th>용도</th></tr></thead><tbody><tr><td><code>deploy_sessions</code> / <code>deploy_tasks</code></td><td>—</td><td>배포 세션·작업 진행</td></tr><tr><td><code>gallery_entries</code></td><td>—</td><td>배포 갤러리</td></tr><tr><td><code>employees</code></td><td><code>employee_id</code> PK</td><td>직원 마스터</td></tr><tr><td><code>evaluations</code></td><td><code>id</code> PK(AUTOINCREMENT) · <strong>UNIQUE(<code>employee_id</code>, <code>fingerprint</code>)</strong></td><td>평가 원문(JSON <code>data</code>) + 감정 보정</td></tr><tr><td><code>batch_work_orders</code></td><td><code>batch_id</code> UNIQUE</td><td>배치 작업서(설정 스냅샷 + 진행)</td></tr><tr><td><code>batch_work_order_items</code></td><td>PK(<code>batch_id</code>, <code>employee_id</code>)</td><td>완료 직원 목록(O(델타) append)</td></tr><tr><td><code>schema_version</code></td><td><code>version</code> PK</td><td>스키마 이력</td></tr><tr><td><code>acquired_sentences</code></td><td>(마이그레이션 생성)</td><td>취득 문장(데이터셋 연결) + KoTE 점수</td></tr><tr><td><code>profanity_employees</code> / <code>profanity_sentences</code></td><td>(마이그레이션 생성)</td><td>욕설 집계</td></tr></tbody></table>
+<h3>4.2.1 evaluations 컬럼 (<code>:80-93</code>)</h3>
+<pre><code>id INTEGER PK AUTOINCREMENT | employee_id TEXT NOT NULL (FK) | evaluator_id TEXT
+evaluation_date TEXT | batch_id TEXT | data TEXT NOT NULL | fingerprint TEXT
+created_at TEXT | sentiment_corrections TEXT DEFAULT '{}'  (← 스키마 v4 추가)</code></pre>
+<ul><li><strong><code>evaluation_id</code>는 고유하지 않다</strong> → 감정 보정은 DB row <code>id</code>(=<code>_db_id</code>)로 키잉한다(<a href="03-emotion-engine.md">03 문서</a> §4). [[project_eval_id_not_unique]]</li><li>중복 방지는 <code>UNIQUE(employee_id, fingerprint)</code>. 실데이터 감사에서 중복률이 높았으므로(≈62.7%, [[project_prod25_audit]]) 집계 시 중복제거를 전제한다.</li><li>⚠️ <code>evaluation_date</code>는 int(예: 2025)로 들어올 수 있어 연/월 행필터가 탈락하는 버그가 있었다 → <code>_get_eval_field_value</code>(<code>perspective_service.py:1602</code>)에서 str 정규화. [[project_eval_date_int_filter_bug]]</li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h2>4.3 스키마 마이그레이션 (<code>_apply_schema_migrations()</code>, <code>:137</code>)</h2>
+<p>부팅 시 <code>schema_version</code>을 보고 누락 버전만 순차 적용한다. 확인된 변경 예:</p>
+<table><thead><tr><th>버전</th><th>변경</th><th>근거</th></tr></thead><tbody><tr><td>v1</td><td>초기(gallery_entries·employees·evaluations)</td><td><code>:129-130</code></td></tr><tr><td>v4</td><td><code>evaluations</code>에 <code>sentiment_corrections TEXT DEFAULT '{}'</code> 추가(문장 단위 감정 override)</td><td><code>:182-188</code></td></tr><tr><td>(추가)</td><td><code>acquired_sentences</code>에 <code>kote_pos/kote_neg/kote_neutral/override_score/source_kind</code> 컬럼</td><td><code>:254-258</code></td></tr><tr><td>(추가)</td><td><code>deploy_sessions</code>에 <code>started_at</code></td><td><code>:275</code></td></tr></tbody></table>
+<blockquote><strong>새 테이블/컬럼을 추가할 때</strong>: <code>_init_db()</code>의 DDL(신규 설치용)과 <code>_apply_schema_migrations()</code>의 버전 분기(기존 DB 업그레이드용) <strong>양쪽</strong>에 추가한다. 한쪽만 넣으면 신규/기존 환경 중 하나가 깨진다.</blockquote>
+<hr>
+<h2>4.4 부팅 자동 마이그레이션 (<code>web/app.py:125-126</code>)</h2>
+<p><code>main()</code>이 <code>deploy_session_service._auto_migrate_evaluations()</code>(<code>:329</code>)를 호출 — DB <code>evaluations</code>가 비어 있으면 레거시 <code>users/*.json</code>을 테이블로 1회 이전한다. <code>_auto_migrate_manifest()</code>(<code>:307</code>)도 함께 존재. 이미 데이터가 있으면 건너뛴다(멱등).</p>
+<hr>
+<h2>4.5 가명화 데이터 취급</h2>
+<ul><li>가명화 대상은 <code>target_employee_id</code>만. 가명 텍스트는 <strong>DB·판정 패킷에만</strong> 두고, 그 외는 원데이터로 다룬다. 이중 가명화 금지(멱등). [[project_pseudonymization_scope]]</li><li>가명 매핑은 <code>src/configs/pseudonym_mappings.enc</code>(암호화). 역가명은 <code>pseudonym_manager.py</code>(<code>src/modules/</code>)가 담당.</li><li><code>plans/</code>는 배포 제외 폴더이며 학습 데이터(가명)는 <strong>이 폴더 외에 두지 않는다</strong>(유출 방지, CLAUDE.md).</li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h1>5 빌드·배포</h1>
+<blockquote><strong>핵심</strong>: 배포는 <code>deploy/build_deploy.ps1</code> 하나로 한다. 빌드 매 단계가 <strong>VERSION.json을 현재 모델로 재생성</strong>하는 것이 정본 규칙(모델 교체 후 미갱신 사고 방지). 잔재 소스(<code>build/</code>·<code>*.egg-info</code>)와 런타임 폴더는 반드시 제외한다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>) <strong>절차 상세 정본</strong>: <a href="../../../project_wordcloud/deployment.md"><code>project_wordcloud/deployment.md</code></a></blockquote>
+<hr>
+<h2>5.1 두 가지 배포 모드 (<code>build_deploy.ps1</code>)</h2>
+<table><thead><tr><th>모드</th><th>실행</th><th>산출물</th><th>내용</th></tr></thead><tbody><tr><td>소스 전용(기본)</td><td><code>.\deploy\build_deploy.ps1</code></td><td><code>wordcloud-project.zip</code></td><td>앱 소스만(제외 규칙 적용)</td></tr><tr><td>패키지 전체</td><td><code>.\deploy\build_deploy.ps1 -Package</code></td><td><code>wordcloud-internal/</code> (+zip)</td><td>runtime(Python) + <strong>model/</strong> + driver + source + <code>start.bat</code></td></tr></tbody></table>
+<ul><li><code>-Package</code>는 base Python <code>Lib</code>(site-packages 제외)를 복사하고(<code>:138</code>), <code>model/</code>을 동봉하며, 실행용 <code>start.bat</code>을 생성한다(<code>:192-212</code>). <code>start.bat</code>은 <code>python -m web.app</code>으로 서버를 띄운다.</li></ul>
+<hr>
+<h2>5.2 배포 제외 목록 (<code>:34-41</code>) — 잔재·런타임·비밀 반입 방지</h2>
+<p><code>$ExcludeDirs</code>:</p>
+<pre><code>venv, __pycache__, .git, .sessions, doc, vendor_python_pkgs, logs, temp,
+node_modules, deploy, .pytest_cache, inputs, scripts, .opencode, .clinerules,
+failed, plans, default, outputs, processed_data,
+build, *.egg-info        ← setup.py 빌드 잔재(옛 소스 사본 반입 방지)</code></pre>
+<p><code>$ExcludeFiles</code>:</p>
+<pre><code>*.pyc, .gitignore, CACHEDIR.TAG, README.md, mermaid.min.js,
+.env, *.jsonl, *.zip, flask_err.txt, flask_out.txt</code></pre>
+<blockquote>⚠️ <strong>잔재 소스 트랩</strong>: 과거 <code>build/</code>·<code>wordcloud-source/</code>(옛 사본)이 반입돼 구버전이 배포되는 사고가 있었다. 정본은 <strong>이 스크립트가 새로 만든 zip</strong>이며, 워킹트리에 미커밋 규칙이 남아 있지 않은지 확인한다. [[project_deploy_gap_worktree_stale_source]] · <code>.env</code>는 제외 목록에 있으므로 비밀키가 패키지에 들어가지 않는다.</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h2>5.3 VERSION.json 동기화 (배포 정본)</h2>
+<p>빌드 시작 시 스크립트가 <code>scripts/gen_version.py</code>를 실행해 VERSION.json을 <strong>현재 <code>model/hr_sentiment_finetuned</code> 기준으로 재생성</strong>한다(<code>:57-80</code>, "항상 이 빌드 단계가 정본으로 만든다").</p>
+<p><code>gen_version.py</code>(<code>scripts/gen_version.py</code>)가 기록하는 값:</p>
+<table><thead><tr><th>필드</th><th>산출</th><th>근거</th></tr></thead><tbody><tr><td><code>system_version</code></td><td>고정 <code>1.1.0</code></td><td><code>:71</code></td></tr><tr><td><code>model_version</code></td><td>고정 <code>hr-sentiment-v1.0</code></td><td><code>:72</code></td></tr><tr><td><code>model_sha256</code></td><td><code>model/hr_sentiment_finetuned/model.safetensors</code>의 SHA-256(없으면 <code>-</code>)</td><td><code>:43-55</code></td></tr><tr><td><code>model_trained</code></td><td>위 파일 mtime 날짜</td><td><code>:58-66</code></td></tr><tr><td><code>source_commit</code></td><td><code>git rev-parse --short HEAD</code></td><td><code>:30-40</code></td></tr><tr><td><code>build_date</code></td><td>UTC ISO8601</td><td><code>:76</code></td></tr></tbody></table>
+<ul><li>무결성 대조: 런타임에 <code>hr_sentiment</code> 싱글톤이 로드 시 디스크 가중치 sha256을 기록(<code>hr_sentiment.py:57-59</code>)하고, <code>version_service</code>가 <strong>선언(VERSION.json)·디스크·메모리 3자</strong>를 대조해 "파일 교체 후 서버 미재시작"을 버전 모달에서 탐지한다.</li></ul>
+<blockquote>🔴 <strong>모델을 교체했다면</strong>: 반드시 <code>gen_version.py</code> 재생성 + 패키지 동봉 + <strong>서버 재시작</strong>. 안 하면 모달 학습일·무결성이 불일치한다. [[project_version_json_deploy_gap]]</blockquote>
+<hr>
+<h2>5.4 배포 후 확인 체크리스트</h2>
+<ol><li><code>-Package</code> zip 안에 <code>model/hr_sentiment_finetuned/</code>가 포함됐는가.</li><li>VERSION.json의 <code>model_sha256</code>·<code>model_trained</code>가 실제 모델과 일치하는가(빌드 로그 <code>VERSION.json OK …</code> 확인, <code>:80</code>).</li><li>잔재 폴더(<code>build/</code>, <code>*.egg-info</code>, 옛 소스 사본)가 zip에 없는가.</li><li><code>start.bat</code> 실행 → 서버 기동 후 버전 모달에 무결성 경고가 없는가.</li></ol>
+<blockquote>배포 패키지 정합성 점검은 <code>deploy-verifier</code> 에이전트의 담당 영역이다(빌드 산출물 포함/제외 대사).</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h1>6 배치 처리</h1>
+<blockquote><strong>핵심</strong>: 약 <strong>1.9만명</strong> 규모의 대량 처리를 청크 수집 → 직원별 처리 → 요약으로 수행하고, 진행 상황을 <strong>작업서(Work Order)</strong> 로 DB에 영구화해 중단 시 Resume한다. 추적 로직은 <strong>O(n) 이하</strong>(O(n²) 금지)를 지킨다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>)</blockquote>
+<hr>
+<h2>6.1 구성 요소</h2>
+<table><thead><tr><th>파일</th><th>책임</th></tr></thead><tbody><tr><td><code>src/services/batch_processor.py</code></td><td>대규모 배치 실행 오케스트레이션(청크 수집→직원 처리→요약)·체크포인트</td></tr><tr><td><code>src/services/batch_work_order_service.py</code></td><td>작업서(설정 스냅샷 + 진행) 영구화·Resume 지원</td></tr><tr><td><code>batch_service.py</code> · <code>batch_manager.py</code> · <code>batch_events.py</code> · <code>batch_staging.py</code></td><td>오케스트레이션·진행 이벤트·staging DB</td></tr><tr><td><code>src/routes/batch_routes.py</code></td><td><code>/api/batch</code> 실행·진행·Resume API</td></tr></tbody></table>
+<ul><li>규모 제약: 배치 대상 약 1.9만명. 추적 자료구조는 선형 이하로 유지한다. [[project_batch_scale_19k]]</li><li><strong>dev 환경은 배치 실행 불가</strong>(원데이터 내부 전용), dev에는 CSV만 반입한다. [[project_dev_no_batch_csv_only]]</li></ul>
+<hr>
+<h2>6.2 작업서(Work Order) 생명주기</h2>
+<p><code>batch_work_order_service.py</code>가 관리하는 상태 전이:</p>
+<pre><code>create_work_order        → status='running'   (설정 스냅샷 저장, items 초기화)   :30
+update_work_order_progress→ 헤더 카운트 갱신(진행/성공/실패/행수)                :70
+add_completed_employees  → 완료 직원 items append (INSERT OR IGNORE, O(델타))    :92
+complete_work_order      → status='completed'                                    :123
+fail_work_order          → status='failed' (전체 중단 시만; 직원 단위 오류 아님) :139</code></pre>
+<ul><li><strong>완료 직원 목록은 별도 items 테이블</strong>(<code>batch_work_order_items</code>, PK=(batch_id, employee_id))에 1직원 1행으로 append한다. JSON 배열 통째 재기록을 피해 수만 명에서도 <strong>O(델타)</strong>를 보장한다(<code>:92-107</code>).</li><li>Resume 대상 조회: <code>get_latest_incomplete_work_order()</code>(<code>:180</code>)는 <code>status IN ('interrupted','failed')</code>만 반환한다. <code>running</code>은 서버가 살아 처리 중이므로 제외한다.</li><li>Resume skip 대상: <code>get_completed_employee_ids(batch_id)</code>(<code>:110</code>)로 이미 완료한 직원을 건너뛴다.</li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h2>6.3 배치 이력 표시 규약</h2>
+<ul><li>배치 이력은 <strong>배치 작업서(batch_id) 기준</strong>으로 출력한다. 평가 중복제거로 실제 반영 건수가 0이어도 작업서 자체는 이력에 표시한다(작업이 있었음을 숨기지 않음). [[project_batch_history_by_workorder]]</li><li>게시판 목록: <code>get_all_work_orders(limit)</code>(<code>:166</code>) — <code>created_at DESC, id DESC</code> 최신순.</li></ul>
+<hr>
+<h2>6.4 필드 무관 처리 주의</h2>
+<p>실데이터 감사에서 <strong>필드(장점/단점) 무관 배치</strong> 산출이 발견됐다([[project_prod25_audit]]). 감정 판정은 필드 프리픽스에 강하게 의존하므로(<a href="03-emotion-engine.md">03 문서</a> §1), 배치가 필드를 올바로 전달하는지가 정확도의 핵심이다. 재추론·대조 시 필드 프리픽스를 반드시 포함한다. [[project_batch_260709_model_gap]]</p>
+<hr>
+<h2>6.5 장시간 작업 중 UI 처리</h2>
+<p>배치처럼 오래 걸리는 작업 중에는 <strong>전면 블러 오버레이 금지</strong>. Nav·버튼만 비활성화하고 진행 상황(진행률·경과시간, <code>progress_time.py</code>)은 계속 보이게 한다. [[feedback_busy_disable_not_block]]</p>
+<hr>
+<div class="pagebreak"></div>
+<h1>7 파인튜닝 데이터 파이프라인</h1>
+<blockquote><strong>핵심</strong>: 감정/리더십 작업·데이터 도착 시 <code>hr-kote-finetune</code> 데이터셋을 <strong>append-only</strong>로 누적하고(상시 RUNBOOK 절차), 사람 검증 gold를 승격해 재학습한다. 최우선 가치는 <strong>긍↔부 오분류 방지</strong>다. 이 폴더(<code>plans/</code>)는 배포 제외 — 학습 데이터는 여기서만 다룬다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>) <strong>상시 절차 정본</strong>: <code>plans/_datasets/kote_finetune/RUNBOOK.md</code> (완료 개념 없는 상시 문서)</blockquote>
+<hr>
+<h2>7.1 데이터셋 레이아웃 (<code>wordcloud_project/plans/_datasets/kote_finetune/</code>)</h2>
+<table><thead><tr><th>경로</th><th>내용</th></tr></thead><tbody><tr><td><code>emotion/emotion.jsonl</code></td><td>감정어 스트림(append-only, 라인당 1 JSON)</td></tr><tr><td><code>leadership/leadership.jsonl</code></td><td>리더십 스트림(append-only)</td></tr><tr><td><code>RUNBOOK.md</code></td><td>상시 절차 + 누적 로그(단일 진입점)</td></tr><tr><td><code>README.md</code></td><td>폴더 규약 · <strong>문서 지도</strong></td></tr><tr><td><code>AUDIT_STANDARD.md</code></td><td>실배치 감사 재현 절차·시드·스크립트</td></tr><tr><td><code>ROADMAP.md</code> · <code>MODELING_LEVERS_PLAN.md</code></td><td>상시 현황·로드맵</td></tr><tr><td><code>scripts/</code></td><td><code>promote_gold.py</code>, <code>finetune_sentiment.py</code>, <code>ensemble_eval_r8_260708.py</code> 등</td></tr></tbody></table>
+<ul><li><strong>누적 방식</strong>: append-only(기존 행 수정·삭제 금지, 정정은 동일 <code>id</code> 신규 리비전). [[project_kote_dataset_runbook]]</li><li><strong>문서 배치 규약</strong>: 상시 현황·로드맵은 <code>plans</code> 금지, <code>_datasets/kote_finetune</code>에 둔다(일회성 설계만 <code>plans/2026/…</code>). 헷갈리면 <code>README.md §문서 지도</code>부터 본다. [[project_dataset_doc_placement]] · [[project_dataset_doc_map]]</li></ul>
+<hr>
+<h2>7.2 트리거 (RUNBOOK §1)</h2>
+<p>다음 중 하나면 RUNBOOK §2 체크리스트 수행:</p>
+<ul><li>감정어/리더십 <strong>분석·알고리즘 강화</strong> 작업(검토 1회 = gold 확정 1회로 겸함).</li><li>취득 코퍼스 <strong>CSV 도착</strong>(<code>data/*.csv</code> 반입).</li><li><code>acquired_sentences</code>에 <strong>신규 행 적재</strong>(핸드오프: <code>acquired_handoff.py</code>).</li></ul>
+<blockquote>⚠️ <strong>범위 임의 축소 금지</strong>: 과거 범위를 "규칙 트랙 한정"으로 줄여 데이터셋 빌드를 생략한 사고(입력 36만, 기록 0)가 있었다. RUNBOOK §2-0은 1~6단계를 <strong>한 명령</strong>으로 묶어 재량 개입을 차단한다. [[feedback_execute_plan_no_descope]]</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h2>7.3 라벨링 원칙 (긍↔부 안전)</h2>
+<ul><li><strong>개선요청 화행 = 부정</strong>("~할 필요/키워야", 사용자 재정). 양가 성향 서술만 중립. [[feedback_improvement_request_is_negative_gold]]</li><li>무종결 단편·긍부 혼재·극성 불명확 → <strong>중립</strong>. 요청 표지 → 부정. 명확한 행위 서술만 → 긍정. [[feedback_incomplete_fragment_neutral]]</li><li>양가 업무태도(꼼꼼·철저·객관·소신)는 <strong>기업 관점 긍정</strong>, 명시 해악표지(고압적/편향/기복)가 붙을 때만 부정. 사생활·성격은 중립. [[feedback_ambiguous_trait_employer_lens]]</li><li>판정은 <strong>블라인드 선판정 → 모델과 대조 → 불일치/저확신만 escalation</strong>, 일치는 silver. 큐에 gold(원본 라벨)를 담지 말 것(미판정 큐가 숨는 버그). [[feedback_prefill_judgment_escalate_uncertain]] · [[project_group_review_gold_conflation]]</li><li>사전 라벨(코퍼스 y/s/e = KoTE 출력)은 정답이 아니다 → 문장 직접 재판정. [[feedback_distrust_prelabels_reanalyze]]</li></ul>
+<hr>
+<h2>7.4 gold 승격 · 재학습</h2>
+<table><thead><tr><th>스크립트</th><th>용도</th><th>주의</th></tr></thead><tbody><tr><td><code>scripts/promote_gold.py</code></td><td>검증된 사람 라벨을 정식 gold 스트림에 적립</td><td>positive gold 826 적립 완료(2026-06-30, D5). [[project_gold_promotion_d5]]</td></tr><tr><td><code>scripts/finetune_sentiment.py</code></td><td>파인튜닝(<strong>seed42, 개발용</strong>)</td><td>A/B 무효 기준 — 배포 비교에 쓰지 말 것</td></tr><tr><td><code>scripts/ensemble_eval_r8_260708.py</code></td><td>재학습·평가(<strong>배포 정본 경로</strong>)</td><td><code>--save-seed 45</code>가 배포 기준선</td></tr></tbody></table>
+<blockquote>🔴 <strong>재학습 정본 = <code>ensemble_eval_r8 … --save-seed 45</code></strong>. <code>finetune_sentiment.py</code>(seed42)는 개발용이라 배포 A/B에 무효다. [[project_retrain_path_seed45]]</blockquote>
+<ul><li><strong>다음 이득 지점</strong>: 쉬운 silver 증강은 정확도를 오히려 떨어뜨린다(천장). 하드샘플 능동학습·사람분 승격(현재 stranded 라벨 다수 미반영)이 다음 수. [[project_finetune_data_ceiling]] · [[project_training_promotion_gap]]</li><li><strong>진짜 어려운 클래스는 중립</strong>(긍↔부 아님): 모델은 중립→긍, 규칙은 중립→부로 파괴하므로 사람 라벨이 정본. [[project_neutral_is_the_hard_class]]</li><li>신규 그룹은 정서가 아니라 <strong>화행</strong>(개선요청·평가회피·역량서술), 기본 극성 neutral. [[project_finetune_groups_are_speechacts]]</li></ul>
+<blockquote><strong>데이터셋 작업 위임</strong>: 이 파이프라인의 실행자는 <code>dataset-curator</code> 에이전트이며, RUNBOOK §0의 "핵심 엔지니어" 역할(가드레일 내장)로 일한다. [[feedback_dataset_core_engineer_role]]</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h1>8 개발 환경·테스트·트러블슈팅</h1>
+<blockquote><strong>핵심</strong>: Python 3.10 + Flask, 로컬 실행은 <code>python -m web.app</code>. 모델(<code>model/</code>)은 <code>wordcloud_project</code>의 형제 폴더에 둔다. <strong>서버는 사용자 허락 없이 실행하지 않는다</strong>(안내만). <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>)</blockquote>
+<hr>
+<h2>8.1 런타임·의존성</h2>
+<table><thead><tr><th>항목</th><th>값</th><th>근거</th></tr></thead><tbody><tr><td>Python</td><td>3.10 (<code>.pyc</code> cpython-310 확인)</td><td><code>pyproject.toml</code>, <code><strong>pycache</strong>/*.cpython-310</code></td></tr><tr><td>웹</td><td>Flask (블루프린트 12개)</td><td><code>web/app.py</code></td></tr><tr><td>ML</td><td><code>torch</code>, <code>transformers</code>, <code>accelerate</code> 등</td><td><code>requirements.txt</code></td></tr><tr><td>형태소</td><td>Kiwi / Okt</td><td><code>src/modules/nlp_analysis.py</code></td></tr><tr><td>의존성 설치</td><td><code>pip install -r requirements.txt</code> (오프라인은 <code>vendor_python_pkgs/</code>)</td><td><code>requirements.txt</code></td></tr></tbody></table>
+<ul><li>모델 디렉터리(둘 다 <code>wordcloud_project</code>의 형제 <code>model/</code> 아래):<ul><li>베이스 KoTE: <code>../../model/kote_for_easygoing_people</code>(<code>settings.py:20</code>)</li><li>HR 파인튜닝: <code>../../model/hr_sentiment_finetuned</code>(<code>settings.py:26</code>)</li></ul></li></ul>
+<hr>
+<h2>8.2 로컬 구동 (안내 — 직접 실행 금지)</h2>
+<blockquote>⚠️ <strong>서버 무단 실행 금지.</strong> 아래는 개발자가 <strong>직접</strong> 실행할 절차 안내이며, 문서 저자(AI)는 서버를 띄우지 않는다. 실행이 필요하면 사용자에게 <code>! python -m web.app</code> 형태로 요청한다. [[feedback_no_server_start]]</blockquote>
+<pre><code># (1) 가상환경·의존성
+python -m venv venv && venv\Scripts\activate
+pip install -r requirements.txt
+# (2) 실행 (기본 127.0.0.1:5001)
+python -m web.app</code></pre>
+<p>주요 환경변수(<code>src/config/settings.py</code>):</p>
+<table><thead><tr><th>변수</th><th>기본</th><th>의미</th></tr></thead><tbody><tr><td><code>FLASK_HOST</code> / <code>FLASK_PORT</code></td><td><code>127.0.0.1</code> / <code>5001</code></td><td>바인드(<code>:48-49</code>)</td></tr><tr><td><code>FLASK_DEBUG</code></td><td><code>True</code></td><td>디버그(<code>:47</code>)</td></tr><tr><td><code>USE_HR_SENTIMENT_MODEL</code></td><td><code>1</code>(on)</td><td>HR 파인튜닝 모델 사용(<code>:27</code>)</td></tr><tr><td><code>SECRET_KEY</code></td><td><code>your_secret_key_here</code></td><td>세션 키 — <strong>배포 전 교체</strong>(<code>:52</code>)</td></tr><tr><td><code>ADMIN_PASSWORD</code></td><td><code>admin1234</code></td><td>관리자 비번 — <strong>배포 전 교체</strong>(<code>:55</code>)</td></tr><tr><td><code>PLANS_DIR</code></td><td><code>plans/2026</code></td><td>Plans 보드 소스(<code>:61</code>)</td></tr></tbody></table>
+<blockquote><code>.env</code>는 배포 제외 목록(<code>build_deploy.ps1:41</code>)에 있으므로 비밀값이 패키지에 들어가지 않는다. 내부망 데스크톱 전용이므로 UI에 모바일/반응형은 고려하지 않는다. [[project_desktop_only_no_mobile]]</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h2>8.3 자주 겪는 함정</h2>
+<table><thead><tr><th>증상</th><th>원인</th><th>대응</th></tr></thead><tbody><tr><td>감정이 전부 규칙 폴백</td><td>모델 디렉터리 부재/로드 실패 → <code>predict_sentiments</code>가 <code>None</code></td><td><code>model_status()</code>(<code>hr_sentiment.py:136</code>)로 <code>dir_exists</code>·<code>load_failed</code> 확인</td></tr><tr><td>버전 모달에 무결성 경고</td><td>모델 파일 교체 후 <strong>서버 미재시작</strong>(디스크≠메모리 지문)</td><td><code>gen_version.py</code> 재생성 + 서버 재시작. [[project_version_json_deploy_gap]]</td></tr><tr><td><code>.bak</code> 파일 수정해도 반영 안 됨</td><td><code>*.py.bak</code>는 <strong>임포트 경로에 없는 잔재</strong></td><td>실제 로드되는 <code>.py</code>를 수정(<a href="02-module-map.md">02 모듈 지도</a> §1 주의)</td></tr><tr><td>재추론이 배포본과 불일치</td><td>필드 프리픽스 누락</td><td><code>f'{field} 평가: {text}'</code> 규약 준수. [[project_batch_260709_model_gap]]</td></tr><tr><td>특정 연/월 필터 시 전건 탈락</td><td><code>evaluation_date</code>가 int</td><td><code>_get_eval_field_value</code> str 정규화. [[project_eval_date_int_filter_bug]]</td></tr><tr><td>배포에 구버전 소스</td><td><code>build/</code>·옛 소스 사본 반입</td><td>새로 빌드한 zip이 정본. [[project_deploy_gap_worktree_stale_source]]</td></tr></tbody></table>
+<hr>
+<h2>8.4 디버깅 원칙</h2>
+<ul><li>버그는 <strong>증상 → 로그 → 재현</strong>부터. 코드 존재는 원인이 아니며, 실제 파라미터로 재현해 게이트를 통과하기 전엔 수정하지 않는다(가설서 출발 금지). [[feedback_diagnose_from_symptom_not_hypothesis]]</li><li>로그 진단은 <code>STAGE</code>(예: <code>DB_LOAD</code>, <code>DB_LOAD_ALL</code>)부터 — <code>perspective_service.py</code>가 <code>request_id</code>·<code>stage</code>를 구조화 로깅한다(<code>:1763</code> 등).</li><li>테스트로 <strong>완료(DN) 선언 금지</strong>: 단위 테스트가 아니라 <strong>실동작 검증</strong> 후에만 DN, 그 전엔 PND + 체크리스트. [[feedback_dn_after_runtime_verify]]</li></ul>
+<hr>
+<div class="pagebreak"></div>
+<h1>9 확장 포인트 / 주의</h1>
+<blockquote><strong>핵심</strong>: 기능을 늘릴 때는 <strong>공통 모듈·표준을 재사용</strong>하고(새로 짓지 말 것), 감정 규칙은 <strong>긍↔부 0</strong> 계약 안에서만 손댄다. 표준 위반은 배포·정확도 사고로 직결된다. <strong>기준 버전 / 최종 확인일</strong>: v1.1.0 · 2026-07-22 (commit <code>7b106b5</code>)</blockquote>
+<hr>
+<h2>9.1 기능을 추가할 때 (Where to plug in)</h2>
+<table><thead><tr><th>추가하려는 것</th><th>두는 위치</th><th>재사용할 공통</th></tr></thead><tbody><tr><td>새 화면</td><td><code>web/templates/</code> + <code>src/routes/ui_routes.py</code></td><td>디자인 시스템 토큰(<a href="../../../ui/common/design-system/00-overview.md">공통 UI 규칙</a>)</td></tr><tr><td>새 API</td><td>해당 도메인 블루프린트(<code>src/routes/*_routes.py</code>) → 서비스</td><td>계층 경계(<a href="01-architecture.md">01 아키텍처</a> §4)</td></tr><tr><td>새 분석 모델</td><td><code>src/modules/</code> 싱글톤</td><td><strong>KoTE는 <code>kote_shared.KoTEModel</code> 재사용</strong>(재로드 금지, VRAM)</td></tr><tr><td>새 테이블/컬럼</td><td><code>_init_db()</code> DDL + <code>_apply_schema_migrations()</code> 양쪽</td><td><code>_get_conn()</code> DAO(<a href="04-data-layer.md">04 데이터 계층</a> §3)</td></tr><tr><td>새 수집 신호</td><td><code>defaultMetadataStructure</code>에 필드 추가</td><td>기존 매핑 UI가 처리 — 별도 셀렉터·예약키·자동감지 <strong>짓지 말 것</strong>. [[feedback_extend_metadata_structure_not_bespoke_ui]]</td></tr></tbody></table>
+<ul><li><strong>KoTE 단일 로드 원칙</strong>: <code>emotion_analysis</code>·<code>leadership_analysis</code>가 한 싱글톤을 공유한다(<code>emotion_analysis.py:53-59</code>). 새 모듈이 KoTE를 또 로드하면 VRAM 한도를 넘길 수 있다.</li><li><strong>DAO 단일 진입</strong>: 모든 SQLite 접근은 <code>deploy_session_service._get_conn()</code>을 거친다(직접 <code>sqlite3.connect</code> 금지).</li></ul>
+<hr>
+<h2>9.2 표준 준수 (링크)</h2>
+<table><thead><tr><th>주제</th><th>정본</th></tr></thead><tbody><tr><td>시간 처리(타임존·저장 포맷)</td><td><a href="../../../development/time-handling-rules.md"><code>development/time-handling-rules.md</code></a></td></tr><tr><td>필드명·네이밍</td><td><a href="../../../development/field-naming-convention.md"><code>development/field-naming-convention.md</code></a></td></tr><tr><td>DB/테이블/DDL 네이밍</td><td><a href="../../../development/database-naming-standard.md"><code>development/database-naming-standard.md</code></a></td></tr><tr><td>레거시 보호(리팩토링 전)</td><td><a href="../../../../core/01.legacy-protection.md"><code>core/01.legacy-protection.md</code></a></td></tr><tr><td>수정 전 백업</td><td><a href="../../../../core/15-backup-before-modify.md"><code>core/15-backup-before-modify.md</code></a></td></tr><tr><td>감정 규칙 상세</td><td><a href="../../../project_wordcloud/modules/emotion-analysis.md"><code>project_wordcloud/modules/emotion-analysis.md</code></a></td></tr></tbody></table>
+<blockquote>참조 경로는 확인일 기준 실존 확인분이다. 문서 구조가 바뀌면 상대 경로가 어긋날 수 있으니 파일명으로 재탐색하라.</blockquote>
+<hr>
+<div class="pagebreak"></div>
+<h2>9.3 감정 규칙을 고칠 때 (가장 위험한 변경)</h2>
+<ol><li><strong>긍↔부 0 계약</strong>: 어떤 분기도 긍정↔부정을 직접 뒤집지 않는다. 규칙이 바꾸는 방향은 →중립 또는 한 방향뿐. [[project_sentiment_core_value]]</li><li><strong>양쪽 코퍼스 검증</strong>: 장점/단점 양쪽 적대셋으로 검증한다(한쪽만 보면 거짓 자신감). [[feedback_validate_both_pos_neg_corpora]]</li><li><strong>그룹 단위 감사</strong>: 문장 두더지잡기 대신 패턴 그룹별 일치율로 검증한다(<code>group_audit_*.py</code>). [[feedback_audit_by_group_not_sentence]]</li><li><strong>부→긍은 override로 고치지 않는다</strong>: 모델이 명백 긍정을 부정으로 본 것은 <strong>재학습(Track1) 몫</strong>. 좁은 긍→중 규칙만 override로 얹는다. [[project_override_bypass_is_correct]]</li><li><strong><code>_explain</code>과 본 함수 동기화</strong>: <code>_sentence_sentiment_override_explain</code>와 <code>sentence_sentiment_override</code>의 분기·점수는 <strong>완전히 동일</strong>해야 한다(<code>perspective_service.py:1226</code>).</li></ol>
+<hr>
+<h2>9.4 하지 말아야 할 것 (사고 예방 요약)</h2>
+<ul><li>❌ 서버 무단 실행 · ❌ dev에서 배치 실행 · ❌ 원데이터 요청(내부망 매핑 UI로 in-place 수집). [[feedback_no_raw_data_build_ui_instead]]</li><li>❌ <code>plans/</code> 밖에 학습 데이터 저장 · ❌ append-only 스트림 수정/삭제.</li><li>❌ 배포 시 <code>build/</code>·옛 소스 사본 반입 · ❌ 모델 교체 후 VERSION.json 미갱신.</li><li>❌ 전면 블러 오버레이(장시간 작업) · ❌ 모바일/반응형 고려(데스크톱 전용).</li></ul>
+<hr>
+<h2>9.5 관련 지침 진입점</h2>
+<ul><li>프로젝트 나침반: <code>wordcloud_project/CLAUDE.md</code> → <a href="../../../../core/00-core.md"><code>core/00-core.md</code></a> 작업 유형 분류표</li><li>보고서/문서 공통규칙: <a href="../../../../core/16-report-writing.md"><code>core/16-report-writing.md</code></a></li><li>배포 절차: <a href="../../../project_wordcloud/deployment.md"><code>project_wordcloud/deployment.md</code></a></li><li>데이터셋 상시 절차: <code>wordcloud_project/plans/_datasets/kote_finetune/RUNBOOK.md</code></li></ul>
+<hr>
+<p><em>개발 메뉴얼 끝. 운영 관점은 <a href="../00-index.md">운영자 메뉴얼</a> 참조.</em></p>
+</div>
+</body>
+</html>

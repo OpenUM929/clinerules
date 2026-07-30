@@ -1,0 +1,14 @@
+#!/bin/sh
+# .clinerules/ 저장소용 pre-commit hook
+# common/core/ 파일 변경 시 details/ 폴더 동기화 확인
+
+cd "$(dirname "$0")/../.." || exit 1
+
+python3 scripts/check_clinerules_sync.py 2>/dev/null || python scripts/check_clinerules_sync.py
+if [ $? -ne 0 ]; then
+    echo ".clinerules pre-commit: sync check failed"
+    exit 1
+fi
+
+echo ".clinerules pre-commit: OK"
+exit 0

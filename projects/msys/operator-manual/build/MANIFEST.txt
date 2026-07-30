@@ -1,0 +1,33 @@
+# MSYS 운영자 메뉴얼 — 통합 빌드 순서
+# 규약: .clinerules/common/operator-manual/DEVELOPMENT/06-integrated-build.md §4
+# 한 줄에 파일 하나. '#' 로 시작하는 줄은 주석.
+# README.md · DEVELOPMENT.md 는 "메뉴얼 본문"이 아니라 작성 가이드이므로 넣지 않는다.
+
+00-getting-started.md
+01-system-overview.md
+02-environment-setup.md
+03-deployment.md
+
+# --- 일반 메뉴 (폴더 = 하나의 챕터, 파일마다 하위 절) ---
+04-common-menus/01-dashboard.md
+04-common-menus/02-collection-schedule.md
+04-common-menus/03-chart-analysis.md
+04-common-menus/04-data-analysis.md
+04-common-menus/05-data-spec.md
+04-common-menus/06-card-summary.md
+04-common-menus/07-mapping.md
+04-common-menus/08-api-key-mngr.md
+04-common-menus/09-jandi.md
+04-common-menus/10-raw-data.md
+04-common-menus/11-admin.md
+04-common-menus/12-api-test.md
+04-common-menus/13-external-links.md
+
+05-mngr-sett.md
+06-daily-operations.md
+07-troubleshooting.md
+08-backup-recovery.md
+
+# --- 부록 (숫자 챕터와 분리, 부록 A/B 로 채번) ---
+appendix/command-cheatsheet.md
+appendix/config-reference.md
