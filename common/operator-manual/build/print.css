@@ -1,0 +1,144 @@
+/* MSYS 운영자 메뉴얼 — A4 인쇄 최적화 스타일시트
+ * 통합 메뉴얼(integrated-manual.html) 및 개별 md 미리보기에 적용.
+ * 외부 의존성 없이 브라우저 "인쇄 → PDF 저장"로 A4 출력.
+ */
+
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans CJK KR", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  color: #1a1a1a;
+}
+
+.container {
+  max-width: 170mm;   /* A4 가용 가로 ≈ 640px @96dpi */
+  margin: 0 auto;
+}
+
+/* 페이지 나누기 마커 */
+.pagebreak {
+  break-before: page;
+  page-break-before: always;
+}
+
+/* 이미지: A4 폭 상한 */
+img {
+  max-width: 640px;
+  height: auto;
+  display: block;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+}
+
+/* 표: A4 폭 상한 + 테두리 */
+table {
+  width: 100%;
+  max-width: 640px;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 9.5pt;
+}
+th, td {
+  border: 1px solid #bbb;
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+th { background: #f2f2f2; }
+
+/* 제목 */
+h1 { font-size: 18pt; border-bottom: 2px solid #333; padding-bottom: 6px; }
+h2 { font-size: 14pt; border-bottom: 1px solid #999; padding-bottom: 3px; margin-top: 18px; }
+h3 { font-size: 12pt; }
+h4 { font-size: 11pt; }
+
+/* 코드/인라인 코드: 줄바꿈 유도 */
+code {
+  background: #f4f4f4;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 9pt;
+  overflow-wrap: break-word;
+}
+pre {
+  background: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  max-width: 640px;
+}
+pre code { background: none; padding: 0; }
+
+/* 인용/강조 */
+blockquote {
+  border-left: 4px solid #4a90d9;
+  margin: 10px 0;
+  padding: 4px 12px;
+  background: #f7fbff;
+  color: #333;
+}
+
+/* 탐색 링크 영역 */
+.nav-links {
+  margin: 14px 0;
+  padding: 8px 12px;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+.nav-links a { text-decoration: none; color: #1a56b0; }
+.nav-links a:hover { text-decoration: underline; }
+
+hr { border: none; border-top: 1px solid #ccc; margin: 16px 0; }
+
+/* 글머리표: 중첩 깊이별 □/○/- (00-a4-authoring-guide §3-5와 동일 마커 체계) */
+ul { margin: 6px 0; padding-left: 0; }
+ul > li {
+  list-style: none;
+  position: relative;
+  padding-left: 22px;
+  margin: 3px 0;
+}
+ul > li::before { content: '□'; position: absolute; left: 2px; color: #1B1760; font-size: 0.9em; }
+ul ul > li::before { content: '○'; }
+ul ul ul > li::before { content: '-'; }
+
+/* 문단번호: 순서 있는 목록은 중첩 깊이만큼 이어지는 계층 번호(1. / 1.1. / 1.1.1.) */
+ol { margin: 6px 0; padding-left: 0; counter-reset: item; list-style: none; }
+ol > li {
+  counter-increment: item;
+  position: relative;
+  padding-left: 30px;
+  margin: 3px 0;
+}
+ol > li::before {
+  content: counters(item, '.') '.';
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  color: #1B1760;
+}
+
+/* 인쇄 시 불필요한 배경 최소화 */
+@media print {
+  body { background: #fff; }
+  .container { max-width: none; }
+  a { color: #000; text-decoration: none; }
+}
+
+/* 화면 미리보기 */
+@media screen {
+  body { background: #eee; padding: 20px 0; }
+  .container { background: #fff; padding: 16mm; box-shadow: 0 0 8px rgba(0,0,0,0.15); }
+}
