@@ -122,15 +122,28 @@ class Numberer:
 ELEMENT_LABEL_RE = re.compile(r'^[①-⑳㉑-㉟㊱-㊿]')
 
 
+def slugify(title: str) -> str:
+    """헤딩 제목 → 앵커 슬러그(GitHub 계열 규칙). 한글은 보존한다."""
+    s = title.strip().lower()
+    s = re.sub(r"[`*_\[\]()<>.,:;!?/\\\"'|·–—]", "", s)
+    return re.sub(r"\s+", "-", s).strip("-")
+
+
 def apply_heading_numbers(numberer, content, prefix, own_depth, is_appendix):
     """content 안의 (#~####) 헤딩에 계층 번호를 주입한다. 코드펜스 내부(``` … ```)는
     건드리지 않는다 — 쉘 주석(`# Windows` 등)을 헤딩으로 오인하지 않기 위함.
     `#### ① 요소명`처럼 원문자(①②③…)로 시작하는 헤딩은 "요소 표 규격"(01-structure.md)의
-    별도 라벨 체계이므로 챕터 번호를 매기지 않는다(카운터도 건드리지 않음)."""
+    별도 라벨 체계이므로 챕터 번호를 매기지 않는다(카운터도 건드리지 않음).
+
+    반환: (번호가 주입된 content, {옛 슬러그: 새 슬러그})
+    번호를 붙이면 헤딩의 앵커 슬러그가 함께 바뀐다(`#설정-관리` → `#63-설정-관리`).
+    문서 안에서 그 절을 가리키던 링크를 같이 고치지 않으면 조용히 깨지므로 맵을 돌려준다.
+    """
     lines = content.split("\n")
     local = [0, 0, 0, 0]   # appendix 전용: base로부터 분리된 파일-로컬 하위 카운터
     in_fence = False
     out = []
+    slug_map = {}
     for line in lines:
         if FENCE_RE.match(line):
             in_fence = not in_fence
@@ -156,10 +169,29 @@ def apply_heading_numbers(numberer, content, prefix, own_depth, is_appendix):
                     eff = min(own_depth + (level - 1), 4)
                     numberer.bump(eff)
                     number = numberer.numstr(eff)
+                slug_map[slugify(title)] = slugify(f"{number} {title}")
                 out.append(f"{m.group(1)} {number} {title}")
                 continue
         out.append(line)
-    return "\n".join(out)
+    return "\n".join(out), slug_map
+
+
+ANCHOR_LINK_RE = re.compile(r'(\]\(#)([^)\s]+)(\))')
+
+
+def remap_anchor_links(content: str, slug_map: dict) -> tuple:
+    """문서 안 `](#슬러그)` 링크를 채번 후 슬러그로 옮긴다. 반환: (content, 미해결 목록)."""
+    unresolved = []
+
+    def sub(m):
+        old = m.group(2)
+        new = slug_map.get(old)
+        if new is None:
+            unresolved.append(old)
+            return m.group(0)
+        return m.group(1) + new + m.group(3)
+
+    return ANCHOR_LINK_RE.sub(sub, content), unresolved
 
 
 def strip_frontmatter(text: str) -> str:
@@ -236,7 +268,9 @@ def rewrite_markdown_paths(md_rel_dir: str, text: str) -> str:
     pattern = re.compile(r'(!?)\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;([^&]+)&quot;|\s+&quot;([^&]+)&quot;)?\)')
     # 위 패턴은 title 처리가 복잡하므로 단순 패턴 2종 사용
     img_pat = re.compile(r'(!\[[^\]]*\]\()([^)\s]+)(\))')
-    link_pat = re.compile(r'(\[[^\]]*\]\()([^)\s]+)(\))')
+    # 이미지(`![alt](url)`)는 위에서 이미 처리했다. `!` 를 배제하지 않으면 링크 패턴이
+    # 같은 자리를 한 번 더 잡아 접두가 두 번 붙는다(`04-common-menus/04-common-menus/…`).
+    link_pat = re.compile(r'(?<!!)(\[[^\]]*\]\()([^)\s]+)(\))')
     text = img_pat.sub(lambda m: m.group(1) + rel_from_root(md_rel_dir, m.group(2)) + m.group(3), text)
     text = link_pat.sub(lambda m: m.group(1) + rel_from_root(md_rel_dir, m.group(2)) + m.group(3), text)
     return text
@@ -379,13 +413,17 @@ def md_to_html(md: str, md_rel_dir: str) -> str:
         m = re.match(r'^(#{1,6})\s+(.*)$', line)
         if m:
             level = len(m.group(1))
-            out.append(f"<h{level}>{inline(m.group(2).strip())}</h{level}>")
+            title = m.group(2).strip()
+            # id 를 달아야 문서 안 `](#슬러그)` 링크가 HTML·PDF 에서도 동작한다.
+            out.append(f'<h{level} id="{slugify(title)}">{inline(title)}</h{level}>')
             i += 1
             continue
 
-        # 수평선
+        # 수평선 — 렌더하지 않고 생략한다(2026-08-19). 장식용 `---` 구분선이 페이지 경계에
+        # 걸리면 "밑줄 한 줄만 있는 빈 페이지"가 생긴다는 사용자 신고 때문에, 절 밖으로 빼서
+        # 혼자 넘어가게 두는 방안 대신 아예 출력하지 않기로 했다 — 절 제목(h1/h2)의 강조색
+        # 경계선이 이미 절 구분을 시각적으로 보여주므로 정보 손실이 없다.
         if re.match(r'^\s*([-*_])(\s*\1){2,}\s*$', line):
-            out.append("<hr>")
             i += 1
             continue
 
@@ -444,6 +482,63 @@ def md_to_html(md: str, md_rel_dir: str) -> str:
                 out.append(f"<p>{inline(para)}</p>")
         continue
 
+    return out
+
+
+HEADING_BLOCK_RE = re.compile(r'^<h([1-4])\s')
+PAGEBREAK_BLOCK = '<div class="pagebreak"></div>'
+
+
+def nest_sections(blocks):
+    """평면 블록 리스트를, 헤딩(h1~h4) 하나마다 <section class="keep-together"> 로 감싼 뒤
+    "바로 다음 헤딩(레벨 무관) 전까지"만 묶는다 — 헤딩 레벨로 계층 중첩하지 않는다(중요).
+
+    ⚠️ 계층 중첩(h1 섹션이 그 안의 h2 섹션들을 전부 품는 방식)은 시도했다가 실패했다
+    (2026-08-19): h1 섹션이 챕터 전체(모든 h2)를 품게 되어 한 페이지보다 훨씬 커지고,
+    `break-inside: avoid-page` 가 그 거대한 박스를 통째로 다음 페이지 시작으로 밀어버려
+    "챕터 제목만 있고 그 아래 아무 내용도 없는 페이지"가 생겼다(사용자 신고).
+    그래서 **레벨과 무관하게 형제(sibling) 단위**로만 묶는다 — h1 자신의 절은 짧은
+    도입부까지만이고, 첫 h2가 나오는 순간 h1 절은 닫히고 h2가 자기 절을 새로 연다.
+    이러면 각 절이 항상 작아서(보통 반 페이지 이내) `avoid-page` 가 실패할 일이 거의 없다.
+
+    목적: 절 하나가 페이지 하단에서 시작해 나머지가 다음 페이지로 잘려 넘어가는 것을 막는다
+    (print.css `.keep-together{break-inside:avoid-page}` 와 짝). 절이 현재 페이지에 다
+    안 들어가면 절 전체가 다음 페이지로 넘어가고, 절 자체가 한 페이지보다 길면(드묾) 그때는
+    어쩔 수 없이 안에서 잘린다(회피 불가능 — CSS 표준 동작).
+
+    원문의 `---` 구분선(`<hr>`)은 md_to_html() 단계에서 아예 렌더하지 않는다(2026-08-19) —
+    혼자 페이지 경계에 걸려 "밑줄 한 줄만 있는 페이지"가 생기는 문제가 있었다. 그래서 이
+    함수는 hr을 신경 쓸 필요가 없다.
+    """
+    out = []
+    open_section = False
+
+    def close():
+        nonlocal open_section
+        if open_section:
+            out.append('</section>')
+            open_section = False
+
+    def open_new():
+        nonlocal open_section
+        out.append('<section class="keep-together">')
+        open_section = True
+
+    for block in blocks:
+        if block == PAGEBREAK_BLOCK:
+            close()
+            out.append(block)
+            continue
+        if HEADING_BLOCK_RE.match(block):
+            close()
+            open_new()
+            out.append(block)
+            continue
+        if not open_section:
+            open_new()
+        out.append(block)
+
+    close()
     return "\n".join(out)
 
 
@@ -452,7 +547,9 @@ def _standalone_image(md_rel_dir: str, para: str) -> str:
     if not m:
         return para
     alt, url = m.group(1), m.group(2)
-    return f'<img alt="{alt}" src="{rel_from_root(md_rel_dir, url)}">'
+    # md_to_html() 진입 시 rewrite_markdown_paths() 가 이미 BASE 기준으로 바꿔 놓았다.
+    # 여기서 다시 부르면 접두가 한 번 더 붙는다.
+    return f'<img alt="{alt}" src="{url}">'
 
 
 # --------------------------------------------------------------------------- #
@@ -470,7 +567,7 @@ def main():
         entries.append(line)
 
     md_parts = []
-    html_parts = []
+    all_blocks = []
     numberer = Numberer()
 
     for rel in entries:
@@ -482,18 +579,29 @@ def main():
         content = strip_nav_links(strip_frontmatter(src.read_text(encoding="utf-8")))
         if rel.replace("\\", "/") not in NUMBERING_SKIP:
             prefix, own_depth, letter = numberer.file_prefix(rel)
-            content = apply_heading_numbers(numberer, content, prefix, own_depth, letter is not None)
-        md_parts.append(content)
-        html_parts.append(md_to_html(content, md_rel_dir))
+            content, slug_map = apply_heading_numbers(
+                numberer, content, prefix, own_depth, letter is not None)
+            content, unresolved = remap_anchor_links(content, slug_map)
+            for u in unresolved:
+                print(f"  !! 앵커 대상 없음 (깨진 채 통합됨): {rel} -> #{u}")
+        # 통합 md 도 BASE 기준 경로여야 한다. 폴더 안 파일(04-common-menus/…)의
+        # `img.<문서명>/…` 은 그 파일 기준 상대경로라, 그대로 합치면 통합본 위치에서
+        # 풀리지 않는다(하위 폴더 문서의 이미지가 전부 깨진다).
+        # md_to_html 은 진입 시 스스로 rewrite 하므로 원본 content 를 넘긴다.
+        md_parts.append(rewrite_markdown_paths(md_rel_dir, content))
+        if all_blocks:
+            all_blocks.append(PAGEBREAK_BLOCK)   # 파일 경계
+        all_blocks.extend(md_to_html(content, md_rel_dir))
         print(f"[ok] {rel}")
 
     # 통합 md (파일 경계마다 pagebreak)
     integrated_md = ("\n\n" + PAGEBREAK_TOKEN + "\n\n").join(md_parts)
     OUT_MD.write_text(integrated_md, encoding="utf-8")
 
-    # 통합 html
+    # 통합 html — 헤딩 레벨대로 <section class="keep-together"> 중첩(절이 페이지 중간에서
+    # 잘리지 않도록. print.css `.keep-together{break-inside:avoid-page}` 와 짝)
     css = CSS.read_text(encoding="utf-8") if CSS.exists() else ""
-    body = ('\n<div class="pagebreak"></div>\n').join(html_parts)
+    body = nest_sections(all_blocks)
     html_doc = f"""<!DOCTYPE html>
 <html lang="ko">
 <head>

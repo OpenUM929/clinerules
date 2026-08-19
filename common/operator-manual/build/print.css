@@ -5,7 +5,15 @@
 
 @page {
   size: A4;
-  margin: 18mm 16mm;
+  margin: 9mm 16mm;
+}
+
+:root {
+  --accent: #1B1760;
+  --accent-light: #EEF0FA;
+  --border: #d7d7e0;
+  --text: #1a1a1a;
+  --muted: #666;
 }
 
 * { box-sizing: border-box; }
@@ -14,7 +22,15 @@ body {
   font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans CJK KR", sans-serif;
   font-size: 10.5pt;
   line-height: 1.5;
-  color: #1a1a1a;
+  color: var(--text);
+}
+
+/* 제목이 페이지 하단에 홀로 남지 않도록: 제목 직후 나눔을 막아 다음 페이지로 넘긴다 */
+h1, h2, h3, h4 {
+  break-after: avoid-page;
+  page-break-after: avoid;
+  break-inside: avoid-page;
+  page-break-inside: avoid;
 }
 
 .container {
@@ -28,13 +44,22 @@ body {
   page-break-before: always;
 }
 
+/* 절 단위 유지: 절이 현재 페이지에 다 안 들어가면 절 전체가 다음 페이지로 넘어간다.
+   build_integrated.py의 nest_sections() 가 헤딩 레벨대로 이 클래스를 씌운 <section>으로
+   감싼다. 절 자체가 한 페이지보다 길면 그때는 불가피하게 내부에서 잘린다. */
+.keep-together {
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
 /* 이미지: A4 폭 상한 */
 img {
   max-width: 640px;
   height: auto;
   display: block;
   margin: 8px 0;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
+  border-radius: 3px;
 }
 
 /* 표: A4 폭 상한 + 테두리 */
@@ -46,47 +71,64 @@ table {
   font-size: 9.5pt;
 }
 th, td {
-  border: 1px solid #bbb;
-  padding: 4px 6px;
+  border: 1px solid var(--border);
+  padding: 5px 7px;
   text-align: left;
   vertical-align: top;
   overflow-wrap: break-word;
 }
-th { background: #f2f2f2; }
+th { background: var(--accent-light); color: var(--accent); font-weight: 700; }
 
 /* 제목 */
-h1 { font-size: 18pt; border-bottom: 2px solid #333; padding-bottom: 6px; }
-h2 { font-size: 14pt; border-bottom: 1px solid #999; padding-bottom: 3px; margin-top: 18px; }
-h3 { font-size: 12pt; }
-h4 { font-size: 11pt; }
+h1 {
+  font-size: 18pt;
+  font-weight: 700;
+  color: var(--accent);
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 8px;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-size: 14pt;
+  font-weight: 700;
+  color: var(--text);
+  border-left: 4px solid var(--accent);
+  padding: 2px 0 2px 10px;
+  margin: 20px 0 10px;
+}
+h3 { font-size: 12pt; font-weight: 700; color: var(--accent); margin: 14px 0 6px; }
+h4 { font-size: 11pt; font-weight: 700; color: var(--muted); margin: 10px 0 4px; }
 
 /* 코드/인라인 코드: 줄바꿈 유도 */
 code {
-  background: #f4f4f4;
-  padding: 1px 4px;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 1px 5px;
   border-radius: 3px;
   font-family: Consolas, "Courier New", monospace;
   font-size: 9pt;
   overflow-wrap: break-word;
 }
 pre {
-  background: #f4f4f4;
+  background: #f6f6fa;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 4px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
   max-width: 640px;
 }
-pre code { background: none; padding: 0; }
+pre code { background: none; padding: 0; color: var(--text); }
 
 /* 인용/강조 */
 blockquote {
-  border-left: 4px solid #4a90d9;
+  border-left: 4px solid var(--accent);
   margin: 10px 0;
   padding: 4px 12px;
-  background: #f7fbff;
+  background: var(--accent-light);
   color: #333;
+  border-radius: 0 3px 3px 0;
 }
 
 /* 탐색 링크 영역 */
@@ -100,7 +142,7 @@ blockquote {
 .nav-links a { text-decoration: none; color: #1a56b0; }
 .nav-links a:hover { text-decoration: underline; }
 
-hr { border: none; border-top: 1px solid #ccc; margin: 16px 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
 /* 글머리표: 중첩 깊이별 □/○/- (00-a4-authoring-guide §3-5와 동일 마커 체계) */
 ul { margin: 6px 0; padding-left: 0; }
@@ -110,7 +152,7 @@ ul > li {
   padding-left: 22px;
   margin: 3px 0;
 }
-ul > li::before { content: '□'; position: absolute; left: 2px; color: #1B1760; font-size: 0.9em; }
+ul > li::before { content: '□'; position: absolute; left: 2px; color: var(--accent); font-size: 0.9em; }
 ul ul > li::before { content: '○'; }
 ul ul ul > li::before { content: '-'; }
 
@@ -127,7 +169,7 @@ ol > li::before {
   position: absolute;
   left: 0;
   font-weight: 600;
-  color: #1B1760;
+  color: var(--accent);
 }
 
 /* 인쇄 시 불필요한 배경 최소화 */

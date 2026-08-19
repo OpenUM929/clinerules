@@ -40,18 +40,22 @@ python ../../common/operator-manual/build/build_integrated.py developer-manual  
 
 | 요소 | 마크다운 | 렌더 양식(print.css) |
 |------|----------|----------------------|
-| 대제목 | `# 제목` (h1) | 18pt, **아래 2px 실선 경계선(#333)** + padding 6px |
-| 섹션 | `## 제목` (h2) | 14pt, **아래 1px 실선 경계선(#999)**, 위 여백 18px |
-| 소제목 / 세부 | `### ` / `#### ` | 12pt / 11pt (경계선 없음) |
+| 대제목 | `# 제목` (h1) | 18pt, 강조색(네이비 `--accent` #1B1760) + **아래 3px 실선 경계선** + padding-bottom 8px |
+| 섹션 | `## 제목` (h2) | 14pt, **왼쪽 4px 강조색 바** + padding-left 10px, 위 여백 20px |
+| 소제목 / 세부 | `### ` / `#### ` | 12pt(강조색) / 11pt(회색 `--muted`) (경계선 없음) |
 | 본문 | 일반 텍스트 | 맑은 고딕 10.5pt / 행간 1.5 / #1a1a1a |
-| 표 | `\| … \|` | 폭 100%(≤640px), 헤더 회색 #f2f2f2, 실선 테두리 #bbb, 9.5pt |
-| 인용/참고(주) | `> 문장` | 왼쪽 4px 파란 바(#4a90d9) + 연하늘 배경(#f7fbff) |
-| 코드/코드블록 | `` ` `` / ```` ``` ```` | 연회색 배경(#f4f4f4), 9pt monospace |
-| 이미지 | `![대체텍스트](경로)` | 폭 상한 640px 자동 맞춤 + 1px 테두리(#ddd) |
-| 수평선 | `---` | 위 1px 실선(#ccc) |
-| 용지 | — | `@page A4`, 여백 18mm×16mm, 컨테이너 170mm |
+| 표 | `\| … \|` | 폭 100%(≤640px), 헤더 연보라 틴트 배경(`--accent-light` #EEF0FA) + 강조색 글자, 테두리 #d7d7e0, 9.5pt |
+| 인용/참고(주) | `> 문장` | 왼쪽 4px 강조색 바 + 연보라 틴트 배경(`--accent-light`) |
+| 코드/코드블록 | `` ` `` / ```` ``` ```` | 연보라 틴트 배경, 강조색 글자(인라인) / 연회색 배경(블록), 9pt monospace |
+| 이미지 | `![대체텍스트](경로)` | 폭 상한 640px 자동 맞춤 + 1px 테두리 + 3px 라운드 |
+| 수평선 | `---` | **렌더하지 않음(2026-08-19)** — 장식용 구분선이 페이지 경계에 걸려 "밑줄 한 줄만 있는 페이지"가 생기는 문제가 있어 아예 생략한다. 절 제목(h1/h2)의 강조색 경계선이 이미 절 구분을 보여준다 |
+| 용지 | — | `@page A4`, 여백 **9mm(상하) × 16mm(좌우)**, 컨테이너 170mm |
+| 절 단위 나눔 방지 | h1~h4 + 그 아래 본문 | `break-inside: avoid-page` — 헤딩 하나와 **바로 다음 헤딩(레벨 무관) 전까지의 본문**을 `<section class="keep-together">`로 묶는다. 그 절이 남은 페이지에 다 안 들어가면 절 전체가 다음 페이지로 넘어간다 |
 
 > **양식을 바꾸려면 `print.css` 한 곳만 고친다.** md 본문에 인라인 스타일·픽셀 폭·`<div>` 를 넣지 않는다(00 §2). 대제목 경계선을 md에서 `---` 로 흉내내지 말 것 — 경계선은 h1 스타일이 자동으로 그린다.
+> 색상은 `print.css` 상단 `:root` 커스텀 프로퍼티(`--accent`·`--accent-light`·`--border`·`--muted`)로 관리한다. 강조색을 바꾸려면 이 4개 변수만 고치면 전체 요소(제목·표·인용·코드·글머리표)에 일괄 반영된다(2026-08-19 모던 디자인 개정).
+>
+> ⚠️ **`.keep-together`는 헤딩 레벨로 계층 중첩하지 않는다(2026-08-19, 실패 사례 확정).** h1 섹션이 그 안의 h2 섹션들을 전부 품는 방식으로 처음 구현했더니, h1 섹션이 챕터 전체 크기가 되어 `avoid-page`가 통째로 다음 페이지로 밀어버려 "챕터 제목만 있고 아래가 빈 페이지"가 나왔다(사용자 신고). 그래서 `build_integrated.py`의 `nest_sections()`는 **레벨과 무관하게 형제(sibling) 단위**로만 묶는다 — 헤딩 하나의 절은 바로 다음 헤딩이 나오는 순간 닫힌다. 이 함수를 고칠 때 계층 중첩으로 되돌리지 않는다.
 
 > 🔴 **고정 규칙(2026-07-27)**: ① 챕터 제목(h1, 18pt)은 항상 섹션(h2, 14pt)보다 커야 한다. ② 경계선(HR)은 h1·h2(챕터·섹션, 레벨1·2)까지만 그린다 — h3/h4(소제목·세부)는 경계선 없이 크기만 작아진다. 둘 다 위 표의 `print.css` 값이 이미 만족하므로, `print.css`를 고칠 때 이 두 관계를 깨지 않는다.
 
@@ -67,10 +71,21 @@ python ../../common/operator-manual/build/build_integrated.py developer-manual  
 2. 각 md는 시맨틱 마크다운으로만 작성(프론트매터는 선택). 페이지나눔은 `---pb---`.
 3. `python <공용 build 경로>/build_integrated.py <폴더>` 실행 → 폴더 안에 `integrated-manual.{md,html}` 생성.
 
-## 5. 오프라인 환경 고려
+## 5. PDF 생성
 
-- weasyprint/pandoc 미설치 환경 가정 → **별도 변환기 없이 브라우저 인쇄**로 PDF 생성.
-- 자동 PDF가 필요하면 weasyprint 설치 후 `build_integrated.py`에 PDF 출력 분기 추가(선택).
+- weasyprint/pandoc은 이 환경에 없는 것을 실측 확인(2026-08-19, `pip`/`ModuleNotFoundError`). `build_integrated.py`는 이 둘에 의존하지 않는다.
+- **기본 경로 — 수동**: `integrated-manual.html`을 브라우저에서 열고 `인쇄 → PDF로 저장`(용지 A4) 선택. 별도 설치 없이 어디서나 된다.
+- **자동 경로 — 로컬 Chrome/Edge 헤드리스**(설치돼 있으면, 실측 확인 2026-08-19): 별도 라이브러리 설치 없이 이미 깔린 브라우저의 헤드리스 인쇄 기능만 쓴다.
+  ```powershell
+  # Windows, Chrome 예시 (Edge면 msedge.exe로 경로만 교체 — 동일 플래그)
+  & "C:\Program Files\Google\Chrome\Application\chrome.exe" `
+    --headless --disable-gpu --no-pdf-header-footer `
+    --print-to-pdf="<출력경로>\integrated-manual.pdf" `
+    "file:///<integrated-manual.html 절대경로>"
+  ```
+  - 출력 대상 파일이 **다른 프로그램(PDF 뷰어 등)에서 열려 있으면 잠겨서 덮어쓰지 못한다** — 그 창을 닫거나 다른 파일명으로 출력한다(실사고 2026-08-19).
+  - `@page` 여백·`.keep-together`·색상 등 `print.css`가 그리는 양식이 그대로 반영된다 — HTML을 별도로 손대지 않는다.
+- 완전 자동 PDF가 CI 등에서 상시 필요해지면 weasyprint 설치 후 `build_integrated.py`에 PDF 출력 분기를 추가하는 방안도 있다(선택, 아직 미구현).
 
 ## 6. 챕터/헤딩 번호 자동 채번 (2026-07-27)
 
