@@ -1,5 +1,19 @@
 # tools — 지침 집행 도구
 
+## dlp_guard.ps1
+
+사내 보안 프로그램이 확장자 단위로 추적 파일을 일괄 삭제하는 사고(2026-08-20, wordcloud 프로젝트에서 최초 확인)에 대한 점검·복원 도구. `.clinerules` 를 서브모듈로 쓰는 모든 프로젝트가 공용으로 쓴다 — 프로젝트 이름을 하드코딩하지 않으며, 항상 실행 시점의 저장소 루트(`.clinerules` 의 부모 폴더) 를 기준으로 동작한다.
+
+```bash
+powershell -NoProfile -File .clinerules/tools/dlp_guard.ps1              # 점검
+powershell -NoProfile -File .clinerules/tools/dlp_guard.ps1 -Restore     # 삭제분만 HEAD 에서 복원
+powershell -NoProfile -File .clinerules/tools/dlp_guard.ps1 -Snapshot    # git 이 못 지키는 자산 백업(.dlpbak)
+```
+
+**자동 점검 적용(권장)**: `.clinerules/.claude/settings.json` 을 프로젝트 루트 `.claude/settings.json` 에 그대로 복사하면 SessionStart 훅으로 매 세션 시작 시 자동 점검된다(평시 무출력, 삭제 발견시에만 경고).
+
+**프로젝트별 커스터마이즈**: 이 스크립트 자체는 수정하지 않는다. 저장소 루트에 `.dlp_guard.json` 을 두면 감시 확장자(`targetExt`)·제외 경로(`excludePrefix`)를 프로젝트별로 덮어쓸 수 있다(스크립트 상단 주석 참조).
+
 ## lint_guidelines.py
 
 지침 저장소가 규칙을 실제로 지키는지 검사한다. 규칙 문서(`common/core/19`~`26`)의 조항과 검사 ID 가 1:1 대응한다. 검사 대상은 지침 저장소(`.clinerules/`)와 저장소 루트의 에이전트 정의(`.claude/agents/*.md`)다.
