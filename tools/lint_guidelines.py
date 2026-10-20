@@ -29,7 +29,8 @@ for _s in (sys.stdout, sys.stderr):
 
 # ---------------------------------------------------------------- 상수
 
-ZONES = {"common", "projects", "outputs", "tools"}
+ZONES = {"common", "projects", "outputs", "tools"}   # 필수 구역 (20-repo-layout §1)
+OPTIONAL_ZONES = {".claude"}                # 있어도 되는 구역 — 배포 설정 템플릿(같은 §1)
 META_FILES = {"README.md", "CLAUDE.md", "NUMBERS.md", "PROJECTS-REGISTRY.md"}
 NUMBERED_ZONE = ("common", "core")          # 번호 필수 구역 (NUM-3)
 SKIP_DIRS = {".git", "outputs"}             # 검사 제외 (산출물·이관 대기분)
@@ -330,7 +331,7 @@ def check_isolation(cr: Path, cfg, out: list):
     tops = {d.name for d in cr.iterdir() if d.is_dir() and d.name != ".git"}
     for missing in ZONES - tops:
         out.append(Finding(missing, 1, "L5", "error", f"구역 폴더 누락: {missing}/"))
-    for extra in tops - ZONES:
+    for extra in tops - ZONES - OPTIONAL_ZONES:
         out.append(Finding(extra, 1, "L5", "error", f"정의되지 않은 최상위 폴더: {extra}/"))
 
 
