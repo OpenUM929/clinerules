@@ -26,10 +26,10 @@
 | 01 | [아키텍처 개요](01-architecture.md) | 실행 진입점 · Flask 앱 구성 · 요청 흐름 · 디렉터리 지도 |
 | 02 | [모듈 지도](02-module-map.md) | 주요 패키지/서비스의 책임과 상호관계 |
 | 03 | [감정분석 엔진](03-emotion-engine.md) | KoTE 로딩/추론 · 3-class 매핑 · 규칙 계층 · 절 단위 판정 · corrections 키잉 |
-| 04 | [데이터 계층](04-data-layer.md) | `.sessions` DB · `src/configs` 매핑 · 스키마 · evaluation_id 함정 |
+| 04 | [데이터 계층](04-data-layer.md) | `.sessions` DB · `src/configs` 매핑 · 스키마 · evaluation_id 함정 · 입력 칸 구분 정본 |
 | 05 | [빌드·배포](05-build-deploy.md) | `build_deploy.ps1` · VERSION.json 재생성 · 배포 제외 폴더 |
-| 06 | [배치 처리](06-batch.md) | 대규모(약 1.9만명) 배치 · 추적 복잡도 · 작업서(Work Order) |
-| 07 | [파인튜닝 데이터 파이프라인](07-finetune-pipeline.md) | `hr-kote-finetune` 데이터셋 · RUNBOOK · gold 승격 · 재학습 경로 |
+| 06 | [배치 처리](06-batch.md) | 대규모(약 1.9만명) 배치 · 추적 복잡도 · 작업서(Work Order) · 🔴 **필드(장점/단점) 소재 지도** |
+| 07 | [파인튜닝 데이터 파이프라인](07-finetune-pipeline.md) | `hr-kote-finetune` 데이터셋 · RUNBOOK · gold 승격 · 재학습 경로 · export 스키마(`f` 키) |
 | 08 | [개발 환경·테스트·트러블슈팅](08-dev-setup-troubleshooting.md) | 로컬 세팅 · 실행 안내 · 자주 겪는 함정 |
 | 09 | [확장 포인트/주의](09-extension-points.md) | 공통 모듈 보호 · 시간처리·필드네이밍 표준 |
 
@@ -42,6 +42,7 @@
 - 배포 절차: [`project_wordcloud/deployment.md`](../../deployment.md)
 - 시간 처리: [`development/time-handling-rules.md`](../../../../common/development/time-handling-rules.md) · 필드 네이밍: [`development/field-naming-convention.md`](../../../../common/development/field-naming-convention.md)
 - 데이터셋 상시 절차: `wordcloud_project/plans/_datasets/kote_finetune/RUNBOOK.md`
+- 🔴 「데이터가 없다」 단정 금지: [`17-hallucination-prevention/09-data-absence.md`](../../../../common/core/17-hallucination-prevention/09-data-absence.md) — 산출물에서 값이 안 보일 때 부재로 결론내기 전 필수
 
 > **정직 고지**: 본 문서는 코드 정적 조사(Read/Grep) 기반이다. 저자는 서버를 기동하거나 배치를 실행하지 않았다(무단 실행 금지 원칙). "동작한다"는 서술은 코드 경로 확인 수준이며, 런타임 검증이 필요한 항목은 각 문서에서 "확인 필요"로 명시했다.
 
@@ -379,6 +380,7 @@ created_at TEXT | sentiment_corrections TEXT DEFAULT '{}'  (← 스키마 v4 추
 - **`evaluation_id`는 고유하지 않다** → 감정 보정은 DB row `id`(=`_db_id`)로 키잉한다([03 문서](03-emotion-engine.md) §4). [[project_eval_id_not_unique]]
 - 중복 방지는 `UNIQUE(employee_id, fingerprint)`. 실데이터 감사에서 중복률이 높았으므로(≈62.7%, [[project_prod25_audit]]) 집계 시 중복제거를 전제한다.
 - ⚠️ `evaluation_date`는 int(예: 2025)로 들어올 수 있어 연/월 행필터가 탈락하는 버그가 있었다 → `_get_eval_field_value`(`perspective_service.py:1602`)에서 str 정규화. [[project_eval_date_int_filter_bug]]
+- 🔴 **입력 칸 구분(장점/단점)의 정본은 `data` JSON 안의 `evaluation_document_field`** 다(`batch_processor.py:291`, 0707_01 Phase2). 극성 판정이 이 값의 프리픽스에 강하게 의존하므로([03 문서](03-emotion-engine.md) §1) **원본 DB가 이 값의 유일한 무손실 보관처**다. 파생 export 에서 이 값이 안 보인다고 "자료에 없다"고 결론내지 말 것 — 소재는 4곳이고 배치 실행 방식이 결정한다 → [06. 배치 처리 §필드 소재 지도](06-batch.md) · [[project_field_lost_in_260714_rebatch]]
 
 ---
 ---pb---
@@ -543,8 +545,71 @@ fail_work_order          → status='failed' (전체 중단 시만; 직원 단�
 실데이터 감사에서 **필드(장점/단점) 무관 배치** 산출이 발견됐다([[project_prod25_audit]]). 감정 판정은 필드 프리픽스에 강하게 의존하므로([03 문서](03-emotion-engine.md) §1), 배치가 필드를 올바로 전달하는지가 정확도의 핵심이다. 재추론·대조 시 필드 프리픽스를 반드시 포함한다. [[project_batch_260709_model_gap]]
 
 ---
+---pb---
 
-## 6.5 장시간 작업 중 UI 처리
+## 6.5 🔴 필드(장점/단점) 소재 지도 — 산출물에서 필드를 찾는 법
+
+> 2026-07-27~28, 산출물 1개에 필드 키가 없다는 이유로 **"자료에 필드가 없다"고 3회 오판**했다. 필드는 아래 4곳 중 어딘가에 있고, 어디에 있는지는 **배치 실행 시점과 반입 방식**이 결정한다. 부재를 단정하기 전에 4곳을 모두 본다. → [`17-hallucination-prevention/09-data-absence.md`](../../../../common/core/17-hallucination-prevention/09-data-absence.md)
+
+### 6.5.1 발생 지점 (원천)
+
+`batch_processor.py:216` 이 극성 문서 컬럼을 정의하고, `_extract_rows_from_chunk`(`:229`)이 **컬럼별로 별도 evaluation 레코드를 방출**하면서 필드를 부착한다.
+
+```python
+POLARITY_DOCUMENT_FIELDS = {                       # :216
+    'evaluation_document_strength': '장점',
+    'evaluation_document_weakness': '단점',
+}
+...
+ev['evaluation_document_field'] = polarity          # :291  (0707_01 Phase2)
+```
+
+- 즉 **1직원 → 장점 레코드 1건 + 단점 레코드 1건**. 매핑된 컬럼이 비면 그 레코드는 방출되지 않는다.
+
+### 6.5.2 보존 경로 4곳
+
+| # | 경로 | 형태 | 유효 조건 |
+|---|------|------|-----------|
+| ① | 원본 DB `evaluations.evaluation_document_field` | `장점`/`단점` 문자열 | **0707_01 이후** 실행 배치. 정본 |
+| ② | export 의 `f` 키 | `{"x":…, "f":"장점"}` | `acquired_handoff.py:98` — **0714 추가**. 그 이전 export 에는 없음 |
+| ③ | 레코드 `id` 접두사 | `batch_…_1-` = 장점 / `batch_…_0-` = 단점 | 장점·단점을 **별도 배치로 실행**했을 때 |
+| ④ | 배치 ID ↔ 반입 파일명 대응 | RUNBOOK 반입 로그의 파일명 | 파일을 나눠 반입해 배치가 여러 개로 쪼개졌을 때 |
+
+### 6.5.3 실측 대응표 (로컬 보유 export)
+
+| export | 연도 | 필드 소재 | 문장 수 |
+|---|---|---|---|
+| `weak_export_260623.jsonl` | 2025 | ④ 배치 5개 ↔ `default/장점_2·3차`, `단점_1·2·3차` | 739,918 |
+| `weak_export_260624.jsonl` | 2024 | ③ `_1-`=장점 443,637 / `_0-`=단점 426,730 | 870,367 |
+| `weak_export_260708.jsonl` | 2024 재실행 | 단일 배치(`batch_20260708_0`) — **필드 없음** | 886,985 |
+| `weak_export_260714.jsonl` | 2023+2024+2025 통합 | 연도별 단일 배치 — **필드 없음** | 2,705,461 |
+| `data/23·24·25.csv` | 각 연도 | 배치 **출력물**(헤더 `batch` 키가 생산 배치 ID). 키는 `x/y/s/e` 뿐 — **필드 없음** | 1,025,634 / 868,889 / 758,880 |
+| `data/23년 장점.csv` · `23년 단점.csv` | 2023 | ② `f` 키 **실기록 최초 사례**(`batch_20260729_0`=장점 / `_1`=단점) | 521,817 / 503,817 (합 1,025,634) |
+
+### 6.5.4 2023년 — 칸별 재추출로 복원 완료 (2026-07-29)
+
+2023년(`batch_20260713_0`)은 장점·단점을 **한 배치로 합쳐** 실행해 그 산출물에는 ①~④ 어디에도 필드가 없었다. **해소 방법은 원본 DB에서 칸을 나눠 재추출하는 것 하나뿐**이며, 2026-07-29 실제로 그렇게 재추출해 `f` 키가 실린 확정본을 얻었다(위 표 마지막 행). 합본 `23.csv`와 **행수·문장집합 100% 일치**를 검증했다(장점 521,817 + 단점 503,817 = 1,025,634).
+
+> 🔴 **함께 확정된 사실 — 2023년 본배치는 필드 프리픽스를 적용해 판정했다.** `data/23.csv` 의 `y` 가 재추출본에 `f"{field} 평가: {text}"` 를 적용해 재추론한 결과와 **769,406문장 100.0000% 일치**(칸별 불일치 0). 즉 **판정에는 필드가 쓰였고 export 에만 안 실렸다.** 24·25 산출물의 분포(칭찬 56.38%/56.58%)도 프리픽스 적용 조건과 맞고 미적용 재추론(51.94%/52.50%)과는 4%p 이상 어긋난다.
+> → **"export 에 `f` 가 없다" 를 "그 배치가 필드 없이 돌았다" 로 읽지 말 것.** 산출물 분포로 조건을 역검정할 수 있다. 검정 스크립트: `…/27_03_completion-report/result/verify_2023_prefix_regime_260729.py`
+
+> ⚠️ 아래 가설들은 **합본 산출물만 가지고 필드를 복원하려는 시도**로, 전수 검정으로 모두 기각됐다. 같은 상황을 다시 만나면 이 가설들을 재시도하지 말고 **곧바로 칸별 재추출**을 요청하라.
+
+| 가설 | 검정 결과 |
+|------|-----------|
+| export `f` 키 | 2023년분 **0건** (당시 보유 export 12종 전부 0건 — 코드에는 있으나 실사용 이력 없음) |
+| 레코드 순번 홀짝 | `applied_rule` 별 홀수 비중 **49.3~52.2%** — 교대 아님 (앞 8행이 교대로 보인 것은 우연) |
+| 원본 `db_id` 홀짝 | 짝수 단점 75,367 / 홀수 74,969 — **50:50** |
+| 판정 패킷으로 대체 | 패킷은 **저마진 하드 16.5%** 편향 표본(171,872건). 전수 대표성 없음 |
+
+**(이력) 재추출 전에 쓴 대체 수단**: 2024·2025년 161만 문장(필드 확정본)을 사전으로 삼아 **동일 문장의 필드를 이관**했다(순도 95% 이상 쏠릴 때만 확정). 커버리지 27.95%(286,062건)에 **반복 상용구 편향**이 있어, 같은 절차를 2024·2025년에 재현해 실측한 편향계수(1.96·1.90배)로 보정해 추정치를 냈다.
+→ 스크립트 `…/27_03_completion-report/result/measure_field_census_2023_260728.py` · `measure_transfer_bias_260728.py`
+
+**정본(전수 확정)**: 위 재추출본 기준 → `…/27_03_completion-report/result/measure_field_census_2023_full_260729.py`. 재배치·재학습은 불필요했고, **DB 재추출만으로 해소**됐다.
+
+---
+
+## 6.6 장시간 작업 중 UI 처리
 
 배치처럼 오래 걸리는 작업 중에는 **전면 블러 오버레이 금지**. Nav·버튼만 비활성화하고 진행 상황(진행률·경과시간, `progress_time.py`)은 계속 보이게 한다. [[feedback_busy_disable_not_block]]
 
@@ -576,6 +641,22 @@ fail_work_order          → status='failed' (전체 중단 시만; 직원 단�
 
 - **누적 방식**: append-only(기존 행 수정·삭제 금지, 정정은 동일 `id` 신규 리비전). [[project_kote_dataset_runbook]]
 - **문서 배치 규약**: 상시 현황·로드맵은 `plans` 금지, `_datasets/kote_finetune`에 둔다(일회성 설계만 `plans/2026/…`). 헷갈리면 `README.md §문서 지도`부터 본다. [[project_dataset_doc_placement]] · [[project_dataset_doc_map]]
+
+### 7.1.1 export(`weak_export_*.jsonl`) 스키마 — 필드 보존 여부
+
+`acquired_handoff.py`가 문장 단위로 방출하는 라인 형식이다.
+
+```python
+line = {"x": sent, "y": label, "s": [pos, neg, neu], "e": top3}
+if field:                       # :98 — field 신호는 파인튜닝 핵심 피처
+    line["f"] = str(field)
+```
+
+- 🔴 **`f` 키는 2026-07-14에 추가됐다**(`:88` 주석, 구 튜플 호환). **그 이전 export 에는 `f` 가 없고**, 그렇다고 필드 정보가 소실된 것은 아니다 — 배치 분리 방식에 따라 `id` 접두사나 배치 ID에 남아 있다.
+- ⚠️ **코드에 있다고 데이터에 있는 것이 아니다.** 2026-07-28 시점 `_datasets/kote_finetune/emotion/` 의 jsonl **12종을 전수 스캔한 결과 `f` 기록 행이 0건**이었다(2023뿐 아니라 2024·2025도). 키가 실제로 채워진 첫 산출물은 **2026-07-29 2023년 칸별 재추출본**(`data/23년 장점.csv`·`23년 단점.csv`, `batch_20260729_0/1`)이다. `f` 를 근거로 삼기 전 **그 파일에서 직접 세어 확인**하라.
+- **`f` 를 남기는 조건**은 매핑 UI에서 `evaluation_document_strength`·`evaluation_document_weakness` 를 **각각 매핑**한 것이다(`batch_processor.py:236` `if mappings.get(f)`). 한쪽만/합쳐 매핑하면 `f` 는 비고, 그 배치 산출물에서는 칸을 복원할 수 없다.
+- **`f` 가 0건이라는 관측만으로 "필드가 없다"고 결론내지 말 것.** 소재 4곳 전체 확인이 필수다 → [06. 배치 처리 §필드 소재 지도](06-batch.md) · [[project_field_lost_in_260714_rebatch]]
+- `data/*.csv`(`x/y/s/e`)는 **배치 출력물**이지 원천 입력이 아니다. 첫 줄 헤더의 `batch` 키가 생산 배치 ID다. 인용 전 입출력 방향을 확정한다.
 
 ---
 
