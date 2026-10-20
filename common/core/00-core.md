@@ -31,7 +31,7 @@
 | 요구사항 명확화 | [13-requirements-clarification.md](13-requirements-clarification.md) |
 | 주석/로그 제거 | [14-comment-log-removal.md](14-comment-log-removal.md) |
 | 스케줄 규칙 | [15-schedule-rules.md](15-schedule-rules.md) |
-| **보고서/결과보고/완료보고** | [16-report-writing.md](16-report-writing.md) · 인쇄·제출 출력 규격 [27-document-output-standard.md](27-document-output-standard.md) |
+| **보고서/결과보고/완료보고 · 행정 제출문 · 붙임** | [16-report-writing.md](16-report-writing.md)(붙임은 §5-1) · 인사이트 우선 구조 [30-report-insight-structure.md](30-report-insight-structure.md) · **결론 형식·개조식 3단 위계** [31-administrative-report-format.md](31-administrative-report-format.md) §1·§1-1 · **주장 무결성(도메인 선행·지표 출처·why-first)** [35-report-claim-integrity.md](35-report-claim-integrity.md) · **서술 기법·표 설계 규범(T·TB)** [36-report-craft-canon.md](36-report-craft-canon.md) · **제출 서식 정본**(구축 완료 보고 1장·FP 종합 분석표) [34-submission-form-canon.md](34-submission-form-canon.md) · 세트 분할·고지 도달 [33-report-set-split.md](33-report-set-split.md) · 인쇄 규격 [27-document-output-standard.md](27-document-output-standard.md) |
 | **프로젝트 식별 / project.json** | [19-project-identity.md](19-project-identity.md) |
 | **지침 문서를 어디에 둘 것인가** | [20-repo-layout.md](20-repo-layout.md) → [24-common-criteria.md](24-common-criteria.md) |
 | **프로젝트 간 지침 혼입 방지** | [21-project-isolation.md](21-project-isolation.md) |
@@ -39,7 +39,7 @@
 | **나침반 문서 작성/분리** | [23-compass-rule.md](23-compass-rule.md) |
 | **새 프로젝트에 지침 적용** | [25-project-onboarding.md](25-project-onboarding.md) |
 | **에이전트 정의(`.claude/agents`) 작성/수정** | [26-agent-definitions.md](26-agent-definitions.md) |
-| **에이전트 0단계 / 결과 검증·세션 종료 회고** | [28-agent-bootstrap.md](28-agent-bootstrap.md) 실행 0단계 · [29-agent-fit-review.md](29-agent-fit-review.md) 채택 전 검증·회고 |
+| **에이전트 0단계 / 결과 검증·세션 종료 회고 / 대용량 자료 착수 전** | [28-agent-bootstrap.md](28-agent-bootstrap.md) 실행 0단계(BOOT-7 → [32-large-material-scan.md](32-large-material-scan.md)) · [29-agent-fit-review.md](29-agent-fit-review.md) 채택 전 검증·회고 |
 | 시간 처리 | [../development/time-handling-rules.md](../development/time-handling-rules.md) |
 | 필드명/네이밍 | [../development/field-naming-convention.md](../development/field-naming-convention.md) |
 | 데이터베이스 / 테이블 / DDL | [../development/database-naming-standard.md](../development/database-naming-standard.md) |

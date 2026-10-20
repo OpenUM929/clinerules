@@ -13,5 +13,5 @@
 | [17-hallucination-prevention/06-doc-drift.md](17-hallucination-prevention/06-doc-drift.md) | 기존 문서 검증(문서 드리프트) |
 | [17-hallucination-prevention/07-violation.md](17-hallucination-prevention/07-violation.md) | 위반 시 처리 |
 | [17-hallucination-prevention/08-exceptions.md](17-hallucination-prevention/08-exceptions.md) | 예외 상황·적용 시점·Legacy Protection 관계 |
-| [17-hallucination-prevention/09-data-absence.md](17-hallucination-prevention/09-data-absence.md) | 🔴 「데이터가 없다」 단정 금지 — 부재 주장 전 확인 경로·입출력 방향 확정 |
+| [17-hallucination-prevention/09-data-absence.md](17-hallucination-prevention/09-data-absence.md) | 🔴 「데이터가 없다」 단정 금지 — 부재 주장 전 확인 경로·입출력 방향 확정 · **재현 불가가 확정된 수치의 처리**(ABS-9·ABS-10) |
 | [17-hallucination-prevention/10-fact-ledger.md](17-hallucination-prevention/10-fact-ledger.md) | 🔴 확인 결과 적립(`_FACTS.md`) — 같은 조사를 반복하는 재확인 루프 차단 |
