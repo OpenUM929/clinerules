@@ -35,7 +35,7 @@ reportTheme: technical
 `main()`(`web/app.py:121`) 실행 순서:
 
 1. `create_app()` — Flask 인스턴스 생성, `template_folder`/`static_folder`를 절대경로로 지정(`web/app.py:55-57`).
-2. 앱 설정: `SECRET_KEY`, `JSON_AS_ASCII=False`(한글 JSON 유지), 업로드 한도 `MAX_CONTENT_LENGTH=100MB`(`web/app.py:60-63`).
+2. 앱 설정: `SECRET_KEY`, `JSON_AS_ASCII=False`(한글 JSON 유지), 업로드 한도 `MAX_CONTENT_LENGTH=500MB`(`web/app.py:87`).
 3. 블루프린트 12개 등록(`web/app.py:66-77`).
 4. 컨텍스트 프로세서 2개 주입: 관리자 세션 상태(`inject_auth_state`)·버전 정보(`inject_version_info` → `version_service.get_version_info()`)(`web/app.py:79-86`).
 5. 404/500 에러 핸들러 등록(`web/app.py:89-100`).
