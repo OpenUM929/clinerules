@@ -8,6 +8,7 @@ reportTheme: technical
 
 > **핵심**: Python 3.10 + Flask, 로컬 실행은 `python -m web.app`. 모델(`model/`)은 `wordcloud_project`의 형제 폴더에 둔다. **서버는 사용자 허락 없이 실행하지 않는다**(안내만).
 > **기준 버전 / 최종 확인일**: v1.1.0 · 2026-07-22 (commit `7b106b5`)
+> 최종 개정 2026-10-29 (당일 제1차) — rev-261029-01
 
 ---
 
@@ -46,8 +47,8 @@ python -m web.app
 | `FLASK_HOST` / `FLASK_PORT` | `127.0.0.1` / `5001` | 바인드(`:48-49`) |
 | `FLASK_DEBUG` | `True` | 디버그(`:47`) |
 | `USE_HR_SENTIMENT_MODEL` | `1`(on) | HR 파인튜닝 모델 사용(`:27`) |
-| `SECRET_KEY` | `your_secret_key_here` | 세션 키 — **배포 전 교체**(`:52`) |
-| `ADMIN_PASSWORD` | `admin1234` | 관리자 비번 — **배포 전 교체**(`:55`) |
+| `SECRET_KEY` | (없음 — 기동마다 무작위 생성) | 세션 서명 키. 지정 불필요, 재시작하면 관리자 로그인이 풀린다(`:59`) |
+| `ADMIN_PASSWORD` | `admin1234` | 가명 매핑 암호키(원래 배포본과 같은 코드 기본값) — 내부망 매핑이 이 값으로 암호화돼 있으므로 **바꾸지 않는다**. 환경변수가 남아 있으면 매핑을 실제로 여는 값을 자동 선택(`:64-83`). 로그인 비밀번호 분실은 로그인 화면에서 재설정(`admin_auth.json`, 매핑 암호키와 분리) |
 | `PLANS_DIR` | `plans/2026` | Plans 보드 소스(`:61`) |
 
 > `.env`는 배포 제외 목록(`build_deploy.ps1:41`)에 있으므로 비밀값이 패키지에 들어가지 않는다. 내부망 데스크톱 전용이므로 UI에 모바일/반응형은 고려하지 않는다. [[project_desktop_only_no_mobile]]
@@ -75,4 +76,10 @@ python -m web.app
 - 테스트로 **완료(DN) 선언 금지**: 단위 테스트가 아니라 **실동작 검증** 후에만 DN, 그 전엔 PND + 체크리스트. [[feedback_dn_after_runtime_verify]]
 
 ---
+## 개정 이력
+
+| 판 | 날짜 | 무엇을·왜 |
+|----|------|-----------|
+| rev-261029-01 | 2026-10-29 | SECRET_KEY·ADMIN_PASSWORD 행을 현행 코드에 맞게 정정(SECRET_KEY 자동 생성, ADMIN_PASSWORD 코드 기본값·자동 선택, 분실 시 로그인 화면 재설정), '배포 전 교체' 안내 폐기 — 근거 common 01-global-rules 규칙 6 |
+
 ↑ [목록으로](00-index.md) · [← 이전: 07. 파인튜닝 데이터 파이프라인](07-finetune-pipeline.md) · [다음: 09. 확장 포인트/주의 →](09-extension-points.md)

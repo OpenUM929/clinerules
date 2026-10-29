@@ -6,6 +6,8 @@ reportTheme: technical
 
 ↑ [목록으로](00-index.md)
 
+> 최종 개정 2026-10-22 (당일 제1차) — rev-261022-01
+>
 > **핵심**: 배포는 `deploy/build_deploy.ps1` 하나로 한다. 빌드 매 단계가 **VERSION.json을 현재 모델로 재생성**하는 것이 정본 규칙(모델 교체 후 미갱신 사고 방지). 잔재 소스(`build/`·`*.egg-info`)와 런타임 폴더는 반드시 제외한다.
 > **기준 버전 / 최종 확인일**: v1.1.0 · 2026-07-22 (commit `7b106b5`)
 > **절차 상세 정본**: [`project_wordcloud/deployment.md`](../../deployment.md)
@@ -24,6 +26,8 @@ reportTheme: technical
 ---
 
 ## 배포 제외 목록 (`:34-41`) — 잔재·런타임·비밀 반입 방지
+
+> **운영 데이터 보존·제외 정본**은 `wordcloud_project/deploy/preserve_manifest.json`, 절차는 [`deployment.md`](../../deployment.md) §운영 데이터 보존. 아래는 고정 제외 목록의 확인 당시 사본이다.
 
 `$ExcludeDirs`:
 ```
@@ -72,6 +76,12 @@ build, *.egg-info        ← setup.py 빌드 잔재(옛 소스 사본 반입 방
 4. `start.bat` 실행 → 서버 기동 후 버전 모달에 무결성 경고가 없는가.
 
 > 배포 패키지 정합성 점검은 `deploy-verifier` 에이전트의 담당 영역이다(빌드 산출물 포함/제외 대사).
+
+## 개정 이력
+
+| 판 | 날짜 | 무엇을·왜 |
+|----|------|-----------|
+| rev-261022-01 | 2026-10-22 | 배포 제외 목록 절에 보존·제외 정본(`preserve_manifest.json`)과 절차(deployment.md §운영 데이터 보존) 포인터 추가 — deployment.md rev-261022-02 와의 상호 참조(NUM-9 RV-5) |
 
 ---
 ↑ [목록으로](00-index.md) · [← 이전: 04. 데이터 계층](04-data-layer.md) · [다음: 06. 배치 처리 →](06-batch.md)

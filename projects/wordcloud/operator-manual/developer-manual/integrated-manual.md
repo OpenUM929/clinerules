@@ -3,6 +3,7 @@
 > **대상 독자**: 이 시스템을 넘겨받아 유지보수·기능개선하는 개발자.
 > **합격 기준**: 코드를 처음 보는 개발자가 이 문서로 아키텍처를 이해하고 안전하게 수정·빌드·배포할 수 있어야 한다.
 > **기준 버전 / 최종 확인일**: system v1.1.0 · model `hr-sentiment-v1.0` · source_commit `7b106b5` · build 2026-07-16 · 문서 확인일 2026-07-22
+> 최종 개정 2026-10-29 (당일 제1차) — rev-261029-01
 
 ---
 
@@ -746,8 +747,8 @@ python -m web.app
 | `FLASK_HOST` / `FLASK_PORT` | `127.0.0.1` / `5001` | 바인드(`:48-49`) |
 | `FLASK_DEBUG` | `True` | 디버그(`:47`) |
 | `USE_HR_SENTIMENT_MODEL` | `1`(on) | HR 파인튜닝 모델 사용(`:27`) |
-| `SECRET_KEY` | `your_secret_key_here` | 세션 키 — **배포 전 교체**(`:52`) |
-| `ADMIN_PASSWORD` | `admin1234` | 관리자 비번 — **배포 전 교체**(`:55`) |
+| `SECRET_KEY` | (없음 — 기동마다 무작위 생성) | 세션 서명 키. 지정 불필요, 재시작하면 관리자 로그인이 풀린다(`:59`) |
+| `ADMIN_PASSWORD` | `admin1234` | 가명 매핑 암호키(원래 배포본과 같은 코드 기본값) — 내부망 매핑이 이 값으로 암호화돼 있으므로 **바꾸지 않는다**. 환경변수가 남아 있으면 매핑을 실제로 여는 값을 자동 선택(`:64-83`). 로그인 비밀번호 분실은 로그인 화면에서 재설정(`admin_auth.json`, 매핑 암호키와 분리) |
 | `PLANS_DIR` | `plans/2026` | Plans 보드 소스(`:61`) |
 
 > `.env`는 배포 제외 목록(`build_deploy.ps1:41`)에 있으므로 비밀값이 패키지에 들어가지 않는다. 내부망 데스크톱 전용이므로 UI에 모바일/반응형은 고려하지 않는다. [[project_desktop_only_no_mobile]]
@@ -845,5 +846,11 @@ python -m web.app
 - 데이터셋 상시 절차: `wordcloud_project/plans/_datasets/kote_finetune/RUNBOOK.md`
 
 ---
+
+## 개정 이력
+
+| 판 | 날짜 | 무엇을·왜 |
+|----|------|-----------|
+| rev-261029-01 | 2026-10-29 | SECRET_KEY·ADMIN_PASSWORD 행을 현행 코드에 맞게 정정(SECRET_KEY 자동 생성, ADMIN_PASSWORD 코드 기본값·자동 선택, 분실 시 로그인 화면 재설정), '배포 전 교체' 안내 폐기 — 근거 common 01-global-rules 규칙 6 |
 
 *개발 메뉴얼 끝. 운영 관점은 [운영자 메뉴얼](../../../../outputs/_transfer-msys/operator-manual/00-index.md) 참조.*
